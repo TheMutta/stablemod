@@ -1,0 +1,15 @@
+[submodule "stablemod-bootloader-data"]
+	path = stablemod-bootloader-data
+	url = ./stablemod-bootloader-data/
+[submodule "stablemod-bootloader"]
+	path = stablemod-bootloader
+	url = ./stablemod-bootloader
+[submodule "stablemod-kernel"]
+	path = stablemod-kernel
+	url = ./stablemod-kernel/
+[submodule "stablemod-kalloc"]
+	path = stablemod-kalloc
+	url = ./stablemod-kalloc/
+[submodule "stablemod-kfs"]
+	path = stablemod-kfs
+	url = ./stablemod-kfs/
