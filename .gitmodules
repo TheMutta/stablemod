@@ -1,15 +1,15 @@
 [submodule "stablemod-bootloader-data"]
 	path = stablemod-bootloader-data
-	url = ./stablemod-bootloader-data/
+	url = git@gitlab.com:stablemod/stablemod-bootloader-data.git
 [submodule "stablemod-bootloader"]
 	path = stablemod-bootloader
-	url = ./stablemod-bootloader
+	url = git@gitlab.com:stablemod/stablemod-bootloader.git
 [submodule "stablemod-kernel"]
 	path = stablemod-kernel
-	url = ./stablemod-kernel/
+	url = git@gitlab.com:stablemod/stablemod-kernel.git
 [submodule "stablemod-kalloc"]
 	path = stablemod-kalloc
-	url = ./stablemod-kalloc/
+	url = git@gitlab.com:stablemod/stablemod-kalloc.git
 [submodule "stablemod-kfs"]
 	path = stablemod-kfs
-	url = ./stablemod-kfs/
+	url = git@gitlab.com:stablemod/stablemod-kfs.git
