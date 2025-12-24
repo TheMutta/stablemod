@@ -27,6 +27,7 @@ case $ARCH in
 			-drive if=pflash,format=raw,readonly=on,file=./testing/bios/efi/x64/code.fd \
 			-drive if=pflash,format=raw,file=./testing/bios/efi/x64/vars.fd \
 			-drive format=raw,file=fat:rw:testing/esp \
+			-device virtio-gpu-pci \
 			-serial stdio			
 		;;
 	"aarch64")
@@ -35,8 +36,8 @@ case $ARCH in
 			-m 4G \
 			-cpu max \
 			-drive if=pflash,format=raw,readonly=on,file=./testing/bios/efi/aarch64/code.fd \
-			-drive if=pflash,format=raw,file=./testing/bios/efi/aarch64/vars.fd \
 			-drive format=raw,file=fat:rw:testing/esp \
+			-device virtio-gpu-pci \
 			-serial stdio
 		;;
 esac
