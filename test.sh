@@ -1,11 +1,17 @@
+#!/bin/bash
+
+ARCH=${1:-x86_64}
+
 mkdir -p ./testing
 
 cargo -Z unstable-options -C stablemod-bootloader build
 cargo -Z unstable-options -C stablemod-kernel build
 
 mkdir -p ./testing/esp/efi/boot/
-cp ./stablemod-kernel/target/x86_64-unknown-none/debug/stablemod-kernel ./testing/esp/stablemod
+cp ./stablemod-kernel/target/x86_64-unknown-none/debug/stablemod-kernel ./testing/esp/stablemod.x64
+cp ./stablemod-kernel/target/aarch64-unknown-none/debug/stablemod-kernel ./testing/esp/stablemod.aarch64
 cp ./stablemod-bootloader/target/x86_64-unknown-uefi/debug/stablemod-bootloader.efi ./testing/esp/efi/boot/bootx64.efi
+cp ./stablemod-bootloader/target/aarch64-unknown-uefi/debug/stablemod-bootloader.efi ./testing/esp/efi/boot/bootaa64.efi
 
 if [ ! -d ./testing/bios/efi ]; then
 	mkdir -p ./testing/bios/efi
@@ -13,10 +19,26 @@ if [ ! -d ./testing/bios/efi ]; then
 	tar -xf ./testing/bios/efi/ovmf.tar.xz --strip-components=1 -C ./testing/bios/efi/
 fi
 
-qemu-system-x86_64 \
-	-machine q35 \
-	-drive if=pflash,format=raw,readonly=on,file=./testing/bios/efi/x64/code.fd \
-	-drive if=pflash,format=raw,file=./testing/bios/efi/x64/vars.fd \
-	-drive format=raw,file=fat:rw:testing/esp \
-	-serial stdio
+case $ARCH in
+	"x86_64")
+		qemu-system-x86_64 \
+			-machine q35 \
+			-m 4G \
+			-drive if=pflash,format=raw,readonly=on,file=./testing/bios/efi/x64/code.fd \
+			-drive if=pflash,format=raw,file=./testing/bios/efi/x64/vars.fd \
+			-drive format=raw,file=fat:rw:testing/esp \
+			-serial stdio			
+		;;
+	"aarch64")
+		qemu-system-aarch64 \
+			-machine virt \
+			-m 4G \
+			-cpu max \
+			-drive if=pflash,format=raw,readonly=on,file=./testing/bios/efi/aarch64/code.fd \
+			-drive if=pflash,format=raw,file=./testing/bios/efi/aarch64/vars.fd \
+			-drive format=raw,file=fat:rw:testing/esp \
+			-serial stdio
+		;;
+esac
+
 
