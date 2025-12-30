@@ -24,6 +24,8 @@ case $ARCH in
 		qemu-system-x86_64 \
 			-machine q35 \
 			-m 4G \
+			-cpu max \
+			-smp 6 \
 			-drive if=pflash,format=raw,readonly=on,file=./testing/bios/efi/x64/code.fd \
 			-drive if=pflash,format=raw,file=./testing/bios/efi/x64/vars.fd \
 			-drive format=raw,file=fat:rw:testing/esp \
@@ -35,6 +37,7 @@ case $ARCH in
 			-machine virt \
 			-m 4G \
 			-cpu max \
+			-smp 6 \
 			-drive if=pflash,format=raw,readonly=on,file=./testing/bios/efi/aarch64/code.fd \
 			-drive format=raw,file=fat:rw:testing/esp \
 			-device virtio-gpu-pci \
