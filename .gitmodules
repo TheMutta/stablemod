@@ -13,3 +13,12 @@
 [submodule "stablemod-kfs"]
 	path = stablemod-kfs
 	url = git@gitlab.com:stablemod/stablemod-kfs.git
+[submodule "stablemod-ipc"]
+	path = stablemod-ipc
+	url = git@gitlab.com:stablemod/stablemod-ipc.git
+[submodule "stablemod-driver-model"]
+	path = stablemod-driver-model
+	url = git@gitlab.com:stablemod/stablemod-driver-model.git
+[submodule "stablemod-driver-test"]
+	path = stablemod-driver-test
+	url = git@gitlab.com:stablemod/stablemod-driver-test.git
