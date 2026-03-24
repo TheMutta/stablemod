@@ -22,3 +22,6 @@
 [submodule "stablemod-driver-test"]
 	path = stablemod-driver-test
 	url = git@gitlab.com:stablemod/stablemod-driver-test.git
+[submodule "stablemod-vm"]
+	path = stablemod-vm
+	url = git@gitlab.com:stablemod/stablemod-vm.git
