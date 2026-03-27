@@ -23,7 +23,7 @@ case $ARCH in
 	"x86_64")
 		qemu-system-x86_64 \
 			-machine q35 \
-			-m 4G \
+			-m 128M \
 			-cpu max \
 			-smp 6 \
 			-drive if=pflash,format=raw,readonly=on,file=./testing/bios/efi/x64/code.fd \
@@ -35,10 +35,21 @@ case $ARCH in
 	"aarch64")
 		qemu-system-aarch64 \
 			-machine virt \
-			-m 4G \
+			-m 128M \
 			-cpu max \
 			-smp 6 \
 			-drive if=pflash,format=raw,readonly=on,file=./testing/bios/efi/aarch64/code.fd \
+			-drive format=raw,file=fat:rw:testing/esp \
+			-device virtio-gpu-pci \
+			-serial stdio
+		;;
+	"riscv64")
+		qemu-system-riscv64 \
+			-machine virt \
+			-m 128M \
+			-cpu max \
+			-smp 6 \
+			-drive if=pflash,format=raw,readonly=on,file=./testing/bios/efi/riscv64/code.fd \
 			-drive format=raw,file=fat:rw:testing/esp \
 			-device virtio-gpu-pci \
 			-serial stdio
