@@ -25,3 +25,6 @@
 [submodule "stablemod-vm"]
 	path = stablemod-vm
 	url = git@gitlab.com:stablemod/stablemod-vm.git
+[submodule "stablemod-config"]
+	path = stablemod-config
+	url = git@gitlab.com:stablemod/stablemod-config.git
