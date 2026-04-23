@@ -28,3 +28,15 @@
 [submodule "stablemod-config"]
 	path = stablemod-config
 	url = git@gitlab.com:stablemod/stablemod-config.git
+[submodule "stablemod-acpi"]
+	path = stablemod-acpi
+	url = git@gitlab.com:stablemod/stablemod-acpi.git
+[submodule "stablemod-pci"]
+	path = stablemod-pci
+	url = git@gitlab.com:stablemod/stablemod-pci.git
+[submodule "stablemod-sched"]
+	path = stablemod-sched
+	url = git@gitlab.com:stablemod/stablemod-sched.git
+[submodule "stablemod-log"]
+	path = stablemod-log
+	url = git@gitlab.com:stablemod/stablemod-log.git
