@@ -4,14 +4,10 @@ ARCH=${1:-x86_64}
 
 mkdir -p ./testing
 
-cargo -Z unstable-options -C stablemod-bootloader build
-cargo -Z unstable-options -C stablemod-kernel build
-
 mkdir -p ./testing/esp/efi/boot/
-cp ./stablemod-kernel/target/x86_64-unknown-none/debug/stablemod-kernel ./testing/esp/stablemod.x64
-cp ./stablemod-kernel/target/aarch64-unknown-none/debug/stablemod-kernel ./testing/esp/stablemod.aarch64
-cp ./stablemod-bootloader/target/x86_64-unknown-uefi/debug/stablemod-bootloader.efi ./testing/esp/efi/boot/bootx64.efi
-cp ./stablemod-bootloader/target/aarch64-unknown-uefi/debug/stablemod-bootloader.efi ./testing/esp/efi/boot/bootaa64.efi
+cp ./microk/kernel.x86_64 ./testing/esp/kenrel.x86_64
+cp ./butler/target/x86_64-unknown-none/debug/butler ./testing/esp/butler.x86_64
+cp ./strap/target/x86_64-unknown-uefi/debug/strap.efi ./testing/esp/efi/boot/bootx64.efi
 
 if [ ! -d ./testing/bios/efi ]; then
 	mkdir -p ./testing/bios/efi

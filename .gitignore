@@ -1,0 +1,11 @@
+/testing
+/tmp
+**/target
+*.x86_64
+*.aarch64
+*.lock
+*.o
+*.elf
+/compiler/build
+/compiler/download
+/compiler/target

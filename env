@@ -1,0 +1,3 @@
+#!/bin/sh
+
+export PATH="$PATH:$PWD/compiler/target/x86_64-elf/bin/"

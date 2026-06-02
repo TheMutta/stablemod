@@ -1,0 +1,12 @@
+[package]
+name = "strap"
+version = "0.1.0"
+edition = "2024"
+
+[build-dependencies]
+bindgen = "0.72.1"
+
+[dependencies]
+elf = { version = "0.8.0", default-features = false }
+log = "0.4.30"
+uefi = { version = "0.37.0", features = ["alloc", "global_allocator", "panic_handler", "logger"] }
