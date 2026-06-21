@@ -5,6 +5,7 @@ ARCH=${1:-x86_64}
 mkdir -p ./testing
 
 mkdir -p ./testing/esp/efi/boot/
+cp ./strap/config_example.toml ./testing/esp/config.toml
 cp ./microk/kernel.x86_64 ./testing/esp/kernel.x86_64
 cp ./butler/target/x86_64-unknown-none/debug/butler ./testing/esp/butler.x86_64
 cp ./strap/target/x86_64-unknown-uefi/debug/strap.efi ./testing/esp/efi/boot/bootx64.efi

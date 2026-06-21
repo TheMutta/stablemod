@@ -8,7 +8,7 @@ use elf::segment::ProgramHeader;
 
 use crate::efi;
 
-pub fn elf_parse_file(file: Vec<u8>) {
+pub fn elf_parse_file(file: Vec<u8>) -> Option<crate::c_abi::boot_executable_info> {
     log::info!("Parsing elf file");
 
     let slice = file.as_slice();
@@ -19,7 +19,7 @@ pub fn elf_parse_file(file: Vec<u8>) {
        ehdr.osabi != ELFOSABI_SYSV ||
        !(ehdr.e_type == ET_EXEC || ehdr.e_type == ET_DYN) {
         log::info!("Invalid elf file");
-        return;
+        return None;
     }
 
     let phdrs: Vec<ProgramHeader> = file.segments().expect("failed to parse phdr table").iter().filter(|phdr| phdr.p_type == PT_LOAD).collect();
@@ -47,22 +47,34 @@ pub fn elf_parse_file(file: Vec<u8>) {
                     }
                 });
 
-                /*
-                let entry = ehdr.e_entry;
-                unsafe {
-                    #[cfg(target_arch = "x86_64")]
-                    core::arch::asm!("jmp {entry}", entry = in(reg) entry);
-                }*/
+                let entry = pages.as_ptr() as u64 + ehdr.e_entry;
+                let info: crate::c_abi::boot_executable_info = crate::c_abi::boot_executable_info {
+                    physical_base: pages.as_ptr() as u64,
+                    virtual_base: pages.as_ptr() as u64,
+                    entry: entry as u64,
+                    virtual_space: 0,
+                    pages: crate::c_abi::boot_executable_info_page_counts {
+                        text_pages: 0,
+                        rodata_pages: 0,
+                        data_pages: 0,
+                        null_pages: 0,
+                    },
+                    crc32: 0,
+                    arenas: crate::c_abi::boot_executable_info_capability_arenas {
+                        root_resource_capability_arena: 0,
+                        root_virtual_capability_arena: 0,
+                    }
+                };
 
-
+                Some(info)
             } else {
-
+                None
             }
         },
         ET_EXEC => {
-
+            None
         },
-        _ => { },
+        _ => { None }
     }
 }
 
