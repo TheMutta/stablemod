@@ -24,12 +24,15 @@ unsafe impl GlobalAlloc for BaseAlloc {
     }
 }
 
+
+
+
 #[global_allocator]
 static mut GLOBAL_ALLOC: BaseAlloc = BaseAlloc;
 
 #[unsafe(no_mangle)]
 fn _start() {
-
+    loop {}
 }
 
 #[panic_handler]

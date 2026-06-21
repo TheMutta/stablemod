@@ -5,7 +5,7 @@ ARCH=${1:-x86_64}
 mkdir -p ./testing
 
 mkdir -p ./testing/esp/efi/boot/
-cp ./microk/kernel.x86_64 ./testing/esp/kenrel.x86_64
+cp ./microk/kernel.x86_64 ./testing/esp/kernel.x86_64
 cp ./butler/target/x86_64-unknown-none/debug/butler ./testing/esp/butler.x86_64
 cp ./strap/target/x86_64-unknown-uefi/debug/strap.efi ./testing/esp/efi/boot/bootx64.efi
 
@@ -19,7 +19,7 @@ case $ARCH in
 	"x86_64")
 		qemu-system-x86_64 \
 			-machine q35 \
-			-m 128M \
+			-m 256M \
 			-cpu max \
 			-smp 6 \
 			-drive if=pflash,format=raw,readonly=on,file=./testing/bios/efi/x64/code.fd \

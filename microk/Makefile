@@ -5,7 +5,8 @@ all: kernel.x86_64
 CC = x86_64-elf-gcc
 LD = x86_64-elf-ld
 
-CFLAGS = -Wall -Wextra -Werror --pedantic -O2 -ffreestanding -mno-red-zone -mcmodel=kernel -nostdlib
+CFLAGS = -Wall -Wextra -Werror --pedantic -O2 -ffreestanding -mno-red-zone -nostdlib -fPIC -fpie
+LDFLAGS = -pie -static -T linker-x86_64.ld
 
 C_SRC = $(wildcard *.c)
 ASM_SRC = $(wildcard *.S)
@@ -20,6 +21,6 @@ OBJ = $(patsubst %.c, %.o, $(C_SRC)) \
 	$(CC) $(CFLAGS) -c $< -o $@
 
 kernel.x86_64: $(OBJ)
-	$(LD) -T linker-x86_64.ld -o kernel.x86_64 $(OBJ)
+	$(LD) -o kernel.x86_64 $(OBJ) $(LDFLAGS)
 
 

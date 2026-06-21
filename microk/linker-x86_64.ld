@@ -1,35 +1,33 @@
 ENTRY(hypervisor_main)
 
-KERNEL_VMA = 0xffffffffff800000;
+PHDRS
+{
+        text            PT_LOAD    FLAGS((1 << 0) | (1 << 2));           /* Execute + Read */
+        rodata          PT_LOAD    FLAGS((1 << 2));                      /* Read only */
+        data            PT_LOAD    FLAGS((1 << 1) | (1 << 2));           /* Write + Read */
+}
 
 SECTIONS
 {
-	. = KERNEL_VMA;
 	_kernel_vma = .;
 
 	.text : ALIGN(0x1000)
 	{
 		_code = .;
 		*(.text*)
-	}
+	} :text
 
 	.rodata : ALIGN(0x1000)
 	{
 		_rodata = .;
 		*(.rodata*)
-	}
+	} :rodata
 
 	.data : ALIGN(0x1000)
 	{
 		_data = .;
 		*(.data*)
-	}
-
-	.eh_frame : ALIGN(0x1000)
-	{
-		_ehframe = .;
-		*(.eh_frame*)
-	}
+	} :data
 
 	.bss : ALIGN(0x1000)
 	{
@@ -42,7 +40,7 @@ SECTIONS
 		 */
 		
 		*(COMMON)
-	}
+	} :data
 
 	_end = .;
 
