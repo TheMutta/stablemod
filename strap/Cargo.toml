@@ -10,5 +10,6 @@ bindgen = "0.72.1"
 elf = { version = "0.8.0", default-features = false }
 hal = { version = "0.1.0", path = "../hal" }
 log = "0.4.30"
+serde = { version = "1.0.228", default-features = false, features = ["derive", "alloc"] }
 toml = { version = "1.1.2", default-features = false, features = ["serde", "parse"] }
 uefi = { version = "0.37.0", features = ["alloc", "global_allocator", "panic_handler", "logger"] }

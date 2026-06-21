@@ -26,8 +26,7 @@ fn efi_load_file(path: CString16) -> uefi::fs::FileSystemResult<Vec<u8>> {
 
 
 use core::ptr::NonNull;
-use toml::Table;
-
+use crate::config::StrapConfig;
 #[entry]
 fn efi_main() -> Status { 
     uefi::helpers::init().unwrap();
@@ -46,7 +45,7 @@ fn efi_main() -> Status {
 
     match efi_load_file(cstr16!("config.toml").into()) {
         Ok(config) => {
-            let config: Table = toml::from_slice(config.as_slice()).expect("could not parse config");
+            let config: StrapConfig = toml::from_slice(config.as_slice()).expect("could not parse config");
             log::info!("config: {:#?}", config);
         },
         Err(err) => {

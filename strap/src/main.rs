@@ -15,5 +15,6 @@ pub mod c_abi {
 
 extern crate alloc;
 
+mod config;
 mod elf;
 mod efi;
