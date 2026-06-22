@@ -6,9 +6,11 @@ use elf::abi::{ELFOSABI_SYSV, ET_DYN, ET_EXEC, PT_LOAD};
 use elf::endian::AnyEndian;
 use elf::segment::ProgramHeader;
 
-use crate::efi;
+use hal::memory::*;
+use core::num::NonZero;
+use core::ptr::NonNull;
 
-pub fn elf_parse_file(file: Vec<u8>) -> Option<crate::c_abi::boot_executable_info> {
+pub fn elf_parse_file<T: HalFrameAllocatorTrait + 'static>(frame_allocator: &HalFrameAllocatorWrapper<T>, file: Vec<u8>) -> Option<crate::c_abi::boot_executable_info> {
     log::info!("Parsing elf file");
 
     let slice = file.as_slice();
@@ -39,7 +41,11 @@ pub fn elf_parse_file(file: Vec<u8>) -> Option<crate::c_abi::boot_executable_inf
     match ehdr.e_type {
         ET_DYN => {
             if lowest_vaddr == 0 {
-                let pages = efi::efi_allocate_pages((highest_vaddr - lowest_vaddr) as usize);
+                let pages = unsafe {
+                    frame_allocator.alloc_frames(NonZero::new_unchecked((highest_vaddr - lowest_vaddr) as usize / 0x1000))
+                }.expect("could not fetch pages");
+                log::info!("Mem range from 0x{:X}", pages.get());
+                let pages = unsafe { NonNull::new_unchecked(pages.get() as *const u8 as *mut u8) };
 
                 phdrs.iter().for_each(|phdr| {
                     unsafe {
@@ -65,6 +71,7 @@ pub fn elf_parse_file(file: Vec<u8>) -> Option<crate::c_abi::boot_executable_inf
                         root_virtual_capability_arena: 0,
                     }
                 };
+                log::info!("Executable info: {:#X?}", info);
 
                 Some(info)
             } else {

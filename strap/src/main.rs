@@ -1,6 +1,7 @@
 //! # Strap
 //! Bootloader
 
+#![allow(warnings)]
 #![cfg_attr(target_os = "uefi", no_std)]
 #![cfg_attr(target_os = "uefi", no_main)]
 
@@ -16,7 +17,6 @@ pub mod c_abi {
 extern crate alloc;
 
 mod config;
-#[cfg(target_os = "uefi")]
 mod elf;
 
 #[cfg(target_os = "linux")]

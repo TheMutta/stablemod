@@ -27,9 +27,15 @@ fn efi_load_file(path: CString16) -> uefi::fs::FileSystemResult<Vec<u8>> {
 
 use core::ptr::NonNull;
 use crate::config::StrapConfig;
+use alloc::boxed::Box;
+use hal::memory::*;
+
 #[entry]
 fn efi_main() -> Status { 
     uefi::helpers::init().unwrap();
+
+    let uefi_allocator = Box::leak(Box::new(HalUefiFrameAllocator::new()));
+    let frame_allocator = HalFrameAllocatorWrapper::new(uefi_allocator);
 
     let mut bootloader_info: NonNull<crate::c_abi::boot_loader_data> = {
         let page_count = size_of::<crate::c_abi::boot_loader_data>() / uefi::boot::PAGE_SIZE;
@@ -56,8 +62,8 @@ fn efi_main() -> Status {
     {
         let kernel = efi_load_file(cstr16!("kernel.x86_64").into()).expect("could not load kernel");
         let objman = efi_load_file(cstr16!("butler.x86_64").into()).expect("could not load objman");
-        let kernel = crate::elf::elf_parse_file(kernel).expect("could not parse kernel");
-        let objman = crate::elf::elf_parse_file(objman).expect("could not parse objman");
+        let kernel = crate::elf::elf_parse_file(&frame_allocator, kernel).expect("could not parse kernel");
+        let objman = crate::elf::elf_parse_file(&frame_allocator, objman).expect("could not parse objman");
 
         unsafe {
             core::ptr::write(&mut bootloader_info.as_mut().kernel_executable, kernel);

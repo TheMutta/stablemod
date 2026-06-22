@@ -19,7 +19,7 @@ use crate::memory::HalFrameAllocatorWrapper;
 use crate::memory::HalFrameAllocatorTrait;
 
 #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
-unsafe impl<T: HalFrameAllocatorTrait> FrameAllocator<Size4KiB> for HalFrameAllocatorWrapper<T> {
+unsafe impl<T: HalFrameAllocatorTrait + 'static> FrameAllocator<Size4KiB> for HalFrameAllocatorWrapper<T> {
     fn allocate_frame(&mut self) -> Option<PhysFrame> {
         let frame = self.alloc_frame()?;
         let frame = PhysFrame::<Size4KiB>::containing_address(PhysAddr::new(frame.get()));
@@ -28,23 +28,23 @@ unsafe impl<T: HalFrameAllocatorTrait> FrameAllocator<Size4KiB> for HalFrameAllo
 }
 
 #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
-pub struct HalPageHierarchy<T: HalFrameAllocatorTrait> {
+pub struct HalPageHierarchy<T: HalFrameAllocatorTrait + 'static> {
     page_table: OffsetPageTable<'static>,
     frame_allocator: HalFrameAllocatorWrapper<T>,
 }
 
 #[cfg(all(target_arch = "aarch64", any(target_os = "none", target_os= "uefi")))]
-pub struct HalPageHierarchy<T: HalFrameAllocatorTrait> {
+pub struct HalPageHierarchy<T: HalFrameAllocatorTrait + 'static> {
     _phantom: core::marker::PhantomData<T>,
 }
 
 #[cfg(target_os = "linux")]
-pub struct HalPageHierarchy<T: HalFrameAllocatorTrait> {
+pub struct HalPageHierarchy<T: HalFrameAllocatorTrait + 'static> {
     physical_mem_fd: i32,
     _phantom: core::marker::PhantomData<T>,
 }
 
-impl<T: HalFrameAllocatorTrait> HalPageHierarchy<T> {
+impl<T: HalFrameAllocatorTrait + 'static> HalPageHierarchy<T> {
     #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
     pub fn init(table_page: u64, frame_alloc: HalFrameAllocatorWrapper<T>) -> Self {
         unsafe {
