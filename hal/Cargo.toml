@@ -4,4 +4,15 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+log = "0.4.33"
+
+[target.x86_64-unknown-none.dependencies]
 x86_64 = { version = "0.15.4", features = ["memory_encryption"] }
+
+[target.x86_64-unknown-uefi.dependencies]
+x86_64 = { version = "0.15.4", features = ["memory_encryption"] }
+
+[target.x86_64-unknown-linux-gnu.dependencies]
+libc = "0.2.186"
+memmap2 = "0.9.10"
+

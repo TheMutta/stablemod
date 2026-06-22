@@ -1,14 +1,23 @@
 #!/bin/bash
 
-ARCH=${1:-x86_64}
+set -ex
+
+ARCH=${1:-x86_64-unknown-linux}
 
 mkdir -p ./testing
 
 mkdir -p ./testing/esp/efi/boot/
-cp ./strap/config_example.toml ./testing/esp/config.toml
-cp ./microk/kernel.x86_64 ./testing/esp/kernel.x86_64
+cp ./strap/config_uefi_example.toml ./testing/esp/config.toml
+cp ./kernel/target/x86_64-unknown-none/debug/kernel ./testing/esp/kernel.x86_64
 cp ./butler/target/x86_64-unknown-none/debug/butler ./testing/esp/butler.x86_64
 cp ./strap/target/x86_64-unknown-uefi/debug/strap.efi ./testing/esp/efi/boot/bootx64.efi
+
+mkdir -p ./testing/linux
+cp ./strap/config_linux_example.toml ./testing/linux/config.toml
+cp ./strap/target/x86_64-unknown-linux-gnu/debug/strap ./testing/linux/strap.x86_64
+cp ./kernel/target/x86_64-unknown-none/debug/kernel ./testing/linux/kernel.x86_64
+cp ./butler/target/x86_64-unknown-none/debug/butler ./testing/linux/butler.x86_64
+
 
 if [ ! -d ./testing/bios/efi ]; then
 	mkdir -p ./testing/bios/efi
@@ -17,7 +26,11 @@ if [ ! -d ./testing/bios/efi ]; then
 fi
 
 case $ARCH in
-	"x86_64")
+	"x86_64-unknown-linux")
+		cd testing/linux/
+		./strap.x86_64
+		;;
+	"x86_64-unknown-uefi")
 		qemu-system-x86_64 \
 			-machine q35 \
 			-m 256M \
@@ -27,9 +40,10 @@ case $ARCH in
 			-drive if=pflash,format=raw,file=./testing/bios/efi/x64/vars.fd \
 			-drive format=raw,file=fat:rw:testing/esp \
 			-device virtio-gpu-pci \
+			-display sdl \
 			-serial stdio			
 		;;
-	"aarch64")
+	"aarch64-unknown-uefi")
 		qemu-system-aarch64 \
 			-machine virt \
 			-m 128M \
@@ -40,7 +54,7 @@ case $ARCH in
 			-device virtio-gpu-pci \
 			-serial stdio
 		;;
-	"riscv64")
+	"riscv64-unknown-uefi")
 		qemu-system-riscv64 \
 			-machine virt \
 			-m 128M \

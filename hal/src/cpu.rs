@@ -1,4 +1,4 @@
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 use x86_64::{
     addr::VirtAddr,
     structures::{
@@ -36,14 +36,14 @@ use x86_64::{
     },
 };
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 pub struct HalProcessor {
     gdt: GlobalDescriptorTable,
     tss: TaskStateSegment,
     idt: InterruptDescriptorTable,
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 impl HalProcessor {
     pub fn new() -> Self {
         Self {
@@ -119,125 +119,124 @@ impl HalProcessor {
     }
 }
 
-
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn divide_error_handler(_isf: InterruptStackFrame) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn debug_handler(_isf: InterruptStackFrame) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn non_maskable_interrupt_handler(_isf: InterruptStackFrame) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn breakpoint_handler(_isf: InterruptStackFrame) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn overflow_handler(_isf: InterruptStackFrame) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn bound_range_exceeded_handler(_isf: InterruptStackFrame) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn invalid_opcode_handler(_isf: InterruptStackFrame) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn device_not_available_handler(_isf: InterruptStackFrame) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn double_fault_handler(_isf: InterruptStackFrame, _error_code: u64) -> ! {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn invalid_tss_handler(_isf: InterruptStackFrame, _error_code: u64) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn segment_not_present_handler(_isf: InterruptStackFrame, _error_code: u64) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn stack_segment_fault_handler(_isf: InterruptStackFrame, _error_code: u64) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn general_protection_fault_handler(_isf: InterruptStackFrame, _error_code: u64) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn page_fault_handler(_isf: InterruptStackFrame, _error_code: PageFaultErrorCode) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn x87_floating_point_handler(_isf: InterruptStackFrame) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn alignment_check_handler(_isf: InterruptStackFrame, _error_code: u64) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn machine_check_handler(_isf: InterruptStackFrame) -> ! {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn simd_floating_point_handler(_isf: InterruptStackFrame) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn virtualization_handler(_isf: InterruptStackFrame) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn cp_protection_exception_handler(_isf: InterruptStackFrame, _error_code: u64) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn hv_injection_exception_handler(_isf: InterruptStackFrame) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn vmm_communication_exception_handler(_isf: InterruptStackFrame, _error_code: u64) {
     loop {}
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn security_exception_handler(_isf: InterruptStackFrame, _error_code: u64) {
     loop {}
 }
 
 use core::arch::naked_asm;
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 #[unsafe(naked)]
 #[unsafe(no_mangle)]
 #[unsafe(link_section = ".syscall_trampoline")]

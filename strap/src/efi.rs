@@ -55,7 +55,7 @@ fn efi_main() -> Status {
 
     {
         let kernel = efi_load_file(cstr16!("kernel.x86_64").into()).expect("could not load kernel");
-        let objman = efi_load_file(cstr16!("butler.x86_64").into()).expect("could not load kernel");
+        let objman = efi_load_file(cstr16!("butler.x86_64").into()).expect("could not load objman");
         let kernel = crate::elf::elf_parse_file(kernel).expect("could not parse kernel");
         let objman = crate::elf::elf_parse_file(objman).expect("could not parse objman");
 

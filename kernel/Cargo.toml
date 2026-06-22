@@ -1,5 +1,5 @@
 [package]
-name = "butler"
+name = "kernel"
 version = "0.1.0"
 edition = "2024"
 
@@ -7,4 +7,5 @@ edition = "2024"
 bindgen = "0.72.1"
 
 [dependencies]
+hal = { version = "0.1.0", path = "../hal" }
 log = "0.4.33"
