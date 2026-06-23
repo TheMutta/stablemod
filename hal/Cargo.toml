@@ -5,9 +5,11 @@ edition = "2024"
 
 [dependencies]
 log = "0.4.33"
+libc = { version = "0.2", optional = true }
 
-[target.'cfg(feature = "use_std")'.dependencies]
-libc = "0.2"
+[features]
+use_std = ["libc"]
+default = []
 
 [target.x86_64-unknown-none.dependencies]
 x86_64 = { version = "0.15.4", features = ["memory_encryption"] }
