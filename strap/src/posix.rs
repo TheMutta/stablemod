@@ -5,10 +5,14 @@ use hal::log::HalLogger;
 use crate::elf::elf_parse_file;
 use std::num::NonZero;
 
+
 pub fn main() {
     HalLogger::init();
 
     log::info!("hello from strap on linux");
+
+    let mut bootloader_info = Box::leak(Box::new(crate::c_abi::boot_loader_data::default()));
+    bootloader_info.signature = crate::c_abi::BOOTLOADER_SIGNATURE;
 
     let ram_size: u64 = 128 * 1024 * 1024;
     log::info!("initializing phisical ram of size {}", ram_size);
@@ -39,12 +43,12 @@ pub fn main() {
     let memfd_allocator = Box::leak(Box::new(HalMemfdFrameAllocator::new(physical_memory_offset, ram_size)));
     let frame_allocator = HalFrameAllocatorWrapper::new(memfd_allocator);
 
-    let mut bootloader_info: crate::c_abi::boot_loader_data;
     let kernel = std::fs::read("kernel.x86_64").expect("could not load kernel");
     let objman = std::fs::read("butler.x86_64").expect("could not load objman");
-
     let kernel = elf_parse_file(&frame_allocator, kernel).expect("could not parse kernel");
-    let objman = elf_parse_file(&frame_allocator, objman);
+    let objman = elf_parse_file(&frame_allocator, objman).expect("could not parse objman");
+    bootloader_info.kernel_executable = kernel;
+    bootloader_info.objman_executable = objman;
 
     let stack_bottom = frame_allocator.alloc_frames(NonZero::new(16).unwrap()).expect("alloced_frames").get();
     let stack_top = stack_bottom + 16 * 4096;
@@ -56,10 +60,12 @@ pub fn main() {
         let absolute_entry = kernel.entry;
         log::info!("jumping to {:X}:{:X}", absolute_entry, aligned_stack);
         core::arch::asm!(
+            "mov rdi, {bootloader_info}",
             "mov rsp, {stack_ptr}",
             "jmp {entry}",
             stack_ptr = in(reg) aligned_stack,
             entry = in(reg) absolute_entry,
+            bootloader_info = in(reg) bootloader_info,
             options(noreturn)
         );
     }

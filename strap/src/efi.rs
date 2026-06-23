@@ -31,6 +31,10 @@ use alloc::boxed::Box;
 use hal::memory::*;
 use core::num::NonZero;
 
+use uefi::system::with_config_table;
+use uefi::table::cfg::ConfigTableEntry;
+use uefi::println;
+
 #[entry]
 fn efi_main() -> Status { 
     uefi::helpers::init().unwrap();
@@ -87,6 +91,50 @@ fn efi_main() -> Status {
         core::ptr::write(&mut bootloader_info.as_mut().objman_executable, objman);
     }
 
+    with_config_table(|slice| {
+        for i in slice {
+            match i.guid {
+                ConfigTableEntry::ACPI_GUID => {
+                    println!("Found ACPI1 at 0x{:x}", i.address as u64);
+
+                    unsafe {
+                        println!("{}{}{}{}{}{}{}{}",
+                            *(i.address as *const u8) as char,
+                            *((i.address as *const u8).add(1)) as char,
+                            *((i.address as *const u8).add(2)) as char,
+                            *((i.address as *const u8).add(3)) as char,
+                            *((i.address as *const u8).add(4)) as char,
+                            *((i.address as *const u8).add(5)) as char,
+                            *((i.address as *const u8).add(6)) as char,
+                            *((i.address as *const u8).add(7)) as char,
+                        );
+                    }
+                },
+                ConfigTableEntry::ACPI2_GUID => {
+                    println!("Found ACPI2 at 0x{:x}", i.address as u64);
+
+                    unsafe {
+                        println!("{}{}{}{}{}{}{}{}",
+                            *(i.address as *const u8) as char,
+                            *((i.address as *const u8).add(1)) as char,
+                            *((i.address as *const u8).add(2)) as char,
+                            *((i.address as *const u8).add(3)) as char,
+                            *((i.address as *const u8).add(4)) as char,
+                            *((i.address as *const u8).add(5)) as char,
+                            *((i.address as *const u8).add(6)) as char,
+                            *((i.address as *const u8).add(7)) as char,
+                        );
+                    }
+                },
+                guid => {
+                    println!("Found {}", guid);
+                },
+            }
+        }
+    });
+
+
+
 
     let mut root_capability_arena: NonNull<crate::c_abi::resource_capability_arena> = {
         let page_count = 4; // TODO
@@ -122,10 +170,12 @@ fn efi_main() -> Status {
         log::info!("jumping to {:X}:{:X}", absolute_entry, aligned_stack);
         let _ = uefi::boot::exit_boot_services(None);
         core::arch::asm!(
+            "mov rdi, {bootloader_info}",
             "mov rsp, {stack_ptr}",
             "jmp {entry}",
             stack_ptr = in(reg) aligned_stack,
             entry = in(reg) absolute_entry,
+            bootloader_info = in(reg) bootloader_info.as_ptr(),
             options(noreturn)
         );
     }

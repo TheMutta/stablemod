@@ -3,6 +3,7 @@ fn main() {
 
     let bindings = bindgen::Builder::default()
         .header("../abi.h")
+        .derive_default(true)
         .use_core()
         .clang_arg("--target=x86_64-none-windows")
         .generate()
