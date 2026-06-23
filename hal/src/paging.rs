@@ -81,25 +81,31 @@ impl HalPageHierarchy {
         }
         #[cfg(target_os = "linux")]
         unsafe {
+            const PROT_READ: i32 = 0x1;
+            const PROT_WRITE: i32 = 0x2;
+            const PROT_EXEC: i32 = 0x4;
+
+            const MAP_PRIVATE: i32 = 0x02;
+            const MAP_ANONYMOUS: i32 = 0x20;
+            const MAP_FIXED: i32 = 0x10;
             let prot = match flags {
-                HalPageFlags::R => libc::PROT_READ,
-                HalPageFlags::RE => libc::PROT_READ | libc::PROT_EXEC,
-                HalPageFlags::RW => libc::PROT_READ | libc::PROT_WRITE,
-                HalPageFlags::RWE => libc::PROT_READ | libc::PROT_WRITE | libc::PROT_EXEC,
+                HalPageFlags::R => PROT_READ,
+                HalPageFlags::RE => PROT_READ | PROT_EXEC,
+                HalPageFlags::RW => PROT_READ | PROT_WRITE,
+                HalPageFlags::RWE => PROT_READ | PROT_WRITE | PROT_EXEC,
             };
 
-            let flags = libc::MAP_PRIVATE | libc::MAP_ANONYMOUS | libc::MAP_FIXED;
+            let flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED;
 
-            let ret = libc::mmap(
-                virt_addr as *mut libc::c_void,
+            let ret = unsafe { syscalls::syscall!(
+                syscalls::Sysno::mmap,
+                virt_addr as *mut core::ffi::c_void,
                 4096, // Size4KiB
                 prot,
                 flags,
                 self.physical_mem_fd,
-                phys_addr as libc::off_t,
-            );
-
-            assert!(ret != libc::MAP_FAILED, "Failed to sync mapping to Linux host MMU");
+                phys_addr
+            ).unwrap() };
         }
     }
 }

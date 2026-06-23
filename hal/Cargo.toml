@@ -6,6 +6,9 @@ edition = "2024"
 [dependencies]
 log = "0.4.33"
 
+[target.'cfg(feature = "use_std")'.dependencies]
+libc = "0.2"
+
 [target.x86_64-unknown-none.dependencies]
 x86_64 = { version = "0.15.4", features = ["memory_encryption"] }
 
@@ -13,11 +16,9 @@ x86_64 = { version = "0.15.4", features = ["memory_encryption"] }
 x86_64 = { version = "0.15.4", features = ["memory_encryption"] }
 uefi = "0.37.0"
 
-[target.x86_64-unknown-linux-musl.dependencies]
+[target.'cfg(target_os = "linux")'.dependencies]
 x86_64 = { version = "0.15.4", features = ["memory_encryption"] }
-libc = "0.2.186"
-memmap2 = "0.9.10"
+syscalls = { version = "0.8.1", default-features = false }
 
 [target.aarch64-unknown-uefi.dependencies]
 uefi = "0.37.0"
-

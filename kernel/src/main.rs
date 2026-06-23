@@ -1,5 +1,5 @@
-#![cfg_attr(target_os = "none", no_std)]
-#![cfg_attr(target_os = "none", no_main)]
+#![no_std]
+#![no_main]
 
 #[allow(non_upper_case_globals)]
 #[allow(non_camel_case_types)]
@@ -8,10 +8,40 @@ pub mod c_abi {
     include!(concat!(env!("OUT_DIR"), "/abi.rs"));
 }
 
-#[cfg(target_os = "none")]
-use hal::panic_handler;
+use hal::log::HalLogger;
 
-#[cfg_attr(target_os = "none", unsafe(no_mangle))]
-fn main() {
+use core::panic::PanicInfo;
+#[panic_handler]
+pub fn panic_handler(_info: &PanicInfo) -> ! {
     loop {}
 }
+
+#[unsafe(no_mangle)]
+extern "C" fn _start() -> ! { 
+    HalLogger::init();
+    log::info!("hello, world!");
+
+    loop {}
+}
+
+extern crate alloc;
+
+use core::{alloc::{GlobalAlloc, Layout}, ptr::null_mut};
+
+struct BaseAlloc;
+
+unsafe impl GlobalAlloc for BaseAlloc {
+    unsafe fn alloc(&self, _layout: Layout) -> *mut u8 {
+        null_mut()
+    }
+
+    unsafe fn dealloc(&self, _ptr: *mut u8, _layout: Layout) {
+
+    }
+}
+
+
+
+
+#[global_allocator]
+static mut GLOBAL_ALLOC: BaseAlloc = BaseAlloc;

@@ -1,28 +1,25 @@
-[target.aarch64-unknown-none.unstable]
-build-std = "core,compiler_builtins,alloc"
-build-std-features = "compiler-builtins-mem"
+[unstable]
+build-std = ["core", "compiler_builtins", "alloc"]
+build-std-features = ["compiler-builtins-mem"]
 
-[target.x86_64-unknown-linux-musl.unstable]
-build-std = "core,compiler_builtins,alloc"
-build-std-features = "compiler-builtins-mem"
-
-[target.x86_64-unknown-none.unstable]
-build-std = "core,compiler_builtins,alloc"
-build-std-features = "compiler-builtins-mem"
-
-[target.x86_64-unknown-linux-musl]
+[target.x86_64-unknown-linux-stablemod]
 rustflags = [
-	"-C", "panic=abort",
-	"-C", "link-args=-shared",
+	"-C", "relocation-model=pic",
+	"-C", "link-args=-static",
 	"-C", "link-args=-pie",
+	"-C", "link-arg=-Bsymbolic",
+	"-C", "link-arg=--no-dynamic-linker",
+
 ]
 [target.x86_64-unknown-none]
 rustflags = [
+	"-C", "relocation-model=pic",
 	"-C", "link-args=-static",
 	"-C", "link-args=-pie",
 ]
 [target.aarch64-unknown-none]
 rustflags = [
+	"-C", "relocation-model=pic",
 	"-C", "link-args=-static",
 	"-C", "link-args=-pie",
 ]

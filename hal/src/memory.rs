@@ -95,15 +95,17 @@ impl HalFrameAllocatorTrait for HalUefiFrameAllocator {
 }
 
 
-#[cfg(target_os = "linux")]
-use std::sync::Mutex;
+use alloc::vec::Vec;
 
+use core::cell::UnsafeCell;
 #[cfg(target_os = "linux")]
 pub struct HalMemfdFrameAllocator {
     physical_memory_offset: u64,
-    frames: Mutex<Vec<bool>>,
+    frames: UnsafeCell<Vec<bool>>,
     max_frames: usize,
 }
+
+use alloc::vec;
 
 #[cfg(target_os = "linux")]
 impl HalMemfdFrameAllocator {
@@ -111,11 +113,11 @@ impl HalMemfdFrameAllocator {
         const FRAME_SIZE: u64 = 4096;
         let max_frames = (ram_size_bytes / FRAME_SIZE) as usize;
         
-        let mut tracking = vec![false; max_frames];
+        let tracking = vec![false; max_frames];
 
         Self {
             physical_memory_offset,
-            frames: Mutex::new(tracking),
+            frames: UnsafeCell::new(tracking),
             max_frames,
         }
     }
@@ -125,7 +127,7 @@ impl HalMemfdFrameAllocator {
 #[cfg(target_os = "linux")]
 impl HalFrameAllocatorTrait for HalMemfdFrameAllocator {
     fn alloc_frame(&self) -> Option<NonZero<u64>> {
-        let mut frames = self.frames.lock().unwrap();
+        let frames = unsafe { &mut *self.frames.get() };
         
         for index in 1..self.max_frames {
             if !frames[index] {
@@ -138,7 +140,7 @@ impl HalFrameAllocatorTrait for HalMemfdFrameAllocator {
     }
 
     fn alloc_frames(&self, count: NonZero<usize>) -> Option<NonZero<u64>> {
-        let mut frames = self.frames.lock().unwrap();
+        let frames = unsafe { &mut *self.frames.get() };
         let count_val = count.get();
 
         if count_val > self.max_frames {
@@ -167,7 +169,7 @@ impl HalFrameAllocatorTrait for HalMemfdFrameAllocator {
         let phys_offset = frame.get() - self.physical_memory_offset;
         let index = (phys_offset / 4096) as usize;
         
-        let mut frames = self.frames.lock().unwrap();
+        let frames = unsafe { &mut *self.frames.get() };
         if index < self.max_frames {
             frames[index] = false;
         }

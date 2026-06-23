@@ -2,7 +2,7 @@ use alloc::vec::Vec;
 
 use elf::ElfBytes;
 use elf::file::Class;
-use elf::abi::{ELFOSABI_SYSV, ET_DYN, ET_EXEC, PT_LOAD};
+use elf::abi::{ELFOSABI_SYSV, ET_DYN, ET_EXEC, PT_LOAD, SHT_RELA, R_X86_64_RELATIVE};
 use elf::endian::AnyEndian;
 use elf::segment::ProgramHeader;
 
@@ -41,17 +41,43 @@ pub fn elf_parse_file(frame_allocator: &HalFrameAllocatorWrapper, file: Vec<u8>)
     match ehdr.e_type {
         ET_DYN => {
             if lowest_vaddr == 0 {
+                let total_bytes = (highest_vaddr - lowest_vaddr) as usize;
                 let pages = unsafe {
-                    frame_allocator.alloc_frames(NonZero::new_unchecked((highest_vaddr - lowest_vaddr) as usize / 0x1000))
+                    frame_allocator.alloc_frames(NonZero::new_unchecked(total_bytes / 0x1000))
                 }.expect("could not fetch pages");
+
                 log::info!("Mem range from 0x{:X}", pages.get());
                 let pages = unsafe { NonNull::new_unchecked(pages.get() as *const u8 as *mut u8) };
+
+                unsafe { core::ptr::write_bytes(pages.as_ptr(), 0, total_bytes); }
 
                 phdrs.iter().for_each(|phdr| {
                     unsafe {
                         core::ptr::copy_nonoverlapping(&slice[phdr.p_offset as usize], pages.add(phdr.p_vaddr as usize).as_ptr(), phdr.p_filesz as usize);
                     }
                 });
+
+                // relocation time
+                let shdrs = file.section_headers().expect("failed to parse section headers");
+
+                // relocation with addends
+                for shdr in shdrs.iter().filter(|s| s.sh_type == SHT_RELA) {
+                    let relas = file.section_data_as_relas(&shdr).expect("failed to read rela section");
+
+                    for rela in relas {
+                        if rela.r_type == R_X86_64_RELATIVE {
+                            // patch it
+                            let target_ptr = (pages.as_ptr() as u64 + rela.r_offset) as *mut u64;
+
+                            // patched
+                            let final_value = (pages.as_ptr() as i64 + rela.r_addend) as u64;
+
+                            unsafe {
+                                *target_ptr = final_value;
+                            }
+                        }
+                    }
+                }
 
                 let entry = pages.as_ptr() as u64 + ehdr.e_entry;
                 let info: crate::c_abi::boot_executable_info = crate::c_abi::boot_executable_info {

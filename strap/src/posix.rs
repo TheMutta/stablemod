@@ -1,10 +1,12 @@
 use hal::memory::*;
 use alloc::boxed::Box;
 
+use hal::log::HalLogger;
 use crate::elf::elf_parse_file;
+use std::num::NonZero;
 
 pub fn main() {
-    hal::log::init();
+    HalLogger::init();
 
     log::info!("hello from strap on linux");
 
@@ -22,7 +24,7 @@ pub fn main() {
         let memfd_virt_addr = libc::mmap(
             std::ptr::null_mut(),
             ram_size as usize,
-            libc::PROT_READ | libc::PROT_WRITE,
+            libc::PROT_READ | libc::PROT_WRITE | libc::PROT_EXEC,
             libc::MAP_SHARED,
             fd,
             0,
@@ -41,6 +43,24 @@ pub fn main() {
     let kernel = std::fs::read("kernel.x86_64").expect("could not load kernel");
     let objman = std::fs::read("butler.x86_64").expect("could not load objman");
 
-    let kernel = elf_parse_file(&frame_allocator, kernel);
+    let kernel = elf_parse_file(&frame_allocator, kernel).expect("could not parse kernel");
     let objman = elf_parse_file(&frame_allocator, objman);
+
+    let stack_bottom = frame_allocator.alloc_frames(NonZero::new(16).unwrap()).expect("alloced_frames").get();
+    let stack_top = stack_bottom + 16 * 4096;
+
+    log::info!("stack top {:X}", stack_top);
+
+    unsafe {
+        let aligned_stack = stack_top & !0xF;
+        let absolute_entry = kernel.entry;
+        log::info!("jumping to {:X}:{:X}", absolute_entry, aligned_stack);
+        core::arch::asm!(
+            "mov rsp, {stack_ptr}",
+            "jmp {entry}",
+            stack_ptr = in(reg) aligned_stack,
+            entry = in(reg) absolute_entry,
+            options(noreturn)
+        );
+    }
 }

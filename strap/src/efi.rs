@@ -93,7 +93,12 @@ fn efi_main() -> Status {
         core::str::from_utf8(core::slice::from_raw_parts(sig_ptr, 8)).unwrap()
     });
 
+    unsafe {
+        let _ = uefi::boot::exit_boot_services(None);
+    }
+
     loop {}
+
 
     Status::SUCCESS
 
