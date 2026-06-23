@@ -6,9 +6,11 @@ Stablemod (previously MicroKosm) is an security-oriented experimental meta-opera
 Today, stablemod is being constantly developing and is racing towards its first alpha release. It is **NOT** ready for use, not nearly so. Expect frequent updates being pushed and code being modified until the API stabilizes.
 
 ### Building and Testing
-In the repo are provided scripts to handly compile all the subrepos and to test them with the obviously named script.
+In the repo are provided scripts to handly compile all the components and to test them with the obviously named script.
 
 A new config utility couple with a comprehensive expandable build system is in the works for the near future.
+
+Stablemod can also be ran as a normal Linux binary! (Shocking revealation!).
 
 #### Requirements
  - Qemu System x86_64, Aarch64, Riscv64
@@ -18,7 +20,7 @@ A new config utility couple with a comprehensive expandable build system is in t
 #### Building
 To build the entire system:
  ```
-./build.sh <arch>
+./build.sh
  ```
 
  To test it:
