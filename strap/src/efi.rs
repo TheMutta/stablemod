@@ -29,6 +29,7 @@ use core::ptr::NonNull;
 use crate::config::StrapConfig;
 use alloc::boxed::Box;
 use hal::memory::*;
+use core::num::NonZero;
 
 #[entry]
 fn efi_main() -> Status { 
@@ -59,17 +60,17 @@ fn efi_main() -> Status {
         },
     }
 
-    {
-        let kernel = efi_load_file(cstr16!("kernel.x86_64").into()).expect("could not load kernel");
-        let objman = efi_load_file(cstr16!("butler.x86_64").into()).expect("could not load objman");
-        let kernel = crate::elf::elf_parse_file(&frame_allocator, kernel).expect("could not parse kernel");
-        let objman = crate::elf::elf_parse_file(&frame_allocator, objman).expect("could not parse objman");
 
-        unsafe {
-            core::ptr::write(&mut bootloader_info.as_mut().kernel_executable, kernel);
-            core::ptr::write(&mut bootloader_info.as_mut().objman_executable, objman);
-        }
+    let kernel = efi_load_file(cstr16!("kernel.x86_64").into()).expect("could not load kernel");
+    let objman = efi_load_file(cstr16!("butler.x86_64").into()).expect("could not load objman");
+    let kernel = crate::elf::elf_parse_file(&frame_allocator, kernel).expect("could not parse kernel");
+    let objman = crate::elf::elf_parse_file(&frame_allocator, objman).expect("could not parse objman");
+
+    unsafe {
+        core::ptr::write(&mut bootloader_info.as_mut().kernel_executable, kernel);
+        core::ptr::write(&mut bootloader_info.as_mut().objman_executable, objman);
     }
+
 
     let mut root_capability_arena: NonNull<crate::c_abi::resource_capability_arena> = {
         let page_count = 4; // TODO
@@ -93,8 +94,24 @@ fn efi_main() -> Status {
         core::str::from_utf8(core::slice::from_raw_parts(sig_ptr, 8)).unwrap()
     });
 
+    let stack_bottom = frame_allocator.alloc_frames(NonZero::new(16).unwrap()).expect("alloced_frames").get();
+    let stack_top = stack_bottom + 16 * 4096;
+
+    log::info!("stack top {:X}", stack_top);
+
+    #[cfg(target_arch = "x86_64")]
     unsafe {
+        let aligned_stack = stack_top & !0xF;
+        let absolute_entry = kernel.entry;
+        log::info!("jumping to {:X}:{:X}", absolute_entry, aligned_stack);
         let _ = uefi::boot::exit_boot_services(None);
+        core::arch::asm!(
+            "mov rsp, {stack_ptr}",
+            "jmp {entry}",
+            stack_ptr = in(reg) aligned_stack,
+            entry = in(reg) absolute_entry,
+            options(noreturn)
+        );
     }
 
     loop {}

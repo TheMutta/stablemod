@@ -1,29 +1,44 @@
 use log::{Record, Level, Metadata, SetLoggerError, LevelFilter};
 
-#[cfg(target_os = "none")]
 pub struct HalLogger;
 
-#[cfg(target_os = "none")]
-impl log::Log for HalLogger {
-    fn enabled(&self, metadata: &Metadata) -> bool {
-        metadata.level() <= Level::Info
-    }
-
-    fn log(&self, record: &Record) {
-        if self.enabled(record.metadata()) {
-        }
-    }
-
-    fn flush(&self) {}
-}
-
-#[cfg(any(target_os = "linux", target_os = "uefi"))]
-pub struct HalLogger;
+#[cfg(all(target_os = "none", target_arch = "x86_64"))]
+struct PortWriter;
 
 #[cfg(target_os = "linux")]
 struct SyscallWriter;
 
+#[cfg(all(target_os = "none", target_arch = "x86_64"))]
+impl PortWriter {
+    fn outb(port: u16, value: u8) {
+        use core::arch::asm;
+        unsafe {
+            asm!(
+                "out dx, al",
+                in("dx") port,
+                in("al") value,
+                options(nomem, nostack, preserves_flags)
+            );
+        }
+    }
+}
+
+
 use core::fmt::Write;
+
+#[cfg(all(target_os = "none", target_arch = "x86_64"))]
+impl Write for PortWriter {
+    fn write_str(&mut self, s: &str) -> core::fmt::Result {
+        const COM1: u16 = 0x3F8; 
+
+        for ch in s.bytes() {
+            Self::outb(COM1, ch);
+        }
+
+        Ok(())
+    }
+}
+
 
 #[cfg(target_os = "linux")]
 impl core::fmt::Write for SyscallWriter {
@@ -40,7 +55,6 @@ impl core::fmt::Write for SyscallWriter {
     }
 }
 
-#[cfg(any(target_os = "linux", target_os = "uefi"))]
 impl log::Log for HalLogger {
     fn enabled(&self, metadata: &Metadata) -> bool {
         metadata.level() <= log::Level::Info
@@ -48,6 +62,12 @@ impl log::Log for HalLogger {
 
     fn log(&self, record: &Record) {
         if self.enabled(record.metadata()) {
+            #[cfg(all(target_os = "none", target_arch = "x86_64"))]
+            {
+                let mut writer = PortWriter;
+                let _ = write!(writer, "{} - {}\n", record.level(), record.args());
+            }
+
             #[cfg(target_os = "uefi")]
             {
                 use uefi::println;

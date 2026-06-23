@@ -20,6 +20,7 @@ pub fn panic_handler(_info: &PanicInfo) -> ! {
 extern "C" fn _start() -> ! { 
     HalLogger::init();
     log::info!("hello, world!");
+    log::info!("this is the kernel speaking!");
 
     loop {}
 }
