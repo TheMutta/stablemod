@@ -135,21 +135,25 @@ impl HalProcessor {
 
 #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn divide_error_handler(_isf: InterruptStackFrame) {
+    log::error!("divide error");
     loop {}
 }
 
 #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn debug_handler(_isf: InterruptStackFrame) {
+    log::error!("debug handler");
     loop {}
 }
 
 #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn non_maskable_interrupt_handler(_isf: InterruptStackFrame) {
+    log::error!("NMI");
     loop {}
 }
 
 #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn breakpoint_handler(_isf: InterruptStackFrame) {
+    log::error!("breakpoint handler");
     loop {}
 }
 

@@ -33,6 +33,11 @@ extern "C" fn _start() -> ! {
     
     log::info!("cpu initialised");
 
+    #[cfg(all(target_arch = "x86_64", target_os = "none"))]
+    unsafe {
+        core::arch::asm!("int 3");
+    }
+
     loop {}
 }
 
