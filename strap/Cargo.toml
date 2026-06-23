@@ -19,5 +19,5 @@ uefi = { version = "0.37.0", features = ["alloc", "global_allocator", "panic_han
 [target.aarch64-unknown-uefi.dependencies]
 uefi = { version = "0.37.0", features = ["alloc", "global_allocator", "panic_handler", "logger"] }
 
-[target.x86_64-unknown-linux-gnu.dependencies]
+[target.x86_64-unknown-linux-musl.dependencies]
 libc = "0.2.186"

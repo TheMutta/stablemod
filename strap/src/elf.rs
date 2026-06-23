@@ -10,7 +10,7 @@ use hal::memory::*;
 use core::num::NonZero;
 use core::ptr::NonNull;
 
-pub fn elf_parse_file<T: HalFrameAllocatorTrait + 'static>(frame_allocator: &HalFrameAllocatorWrapper<T>, file: Vec<u8>) -> Option<crate::c_abi::boot_executable_info> {
+pub fn elf_parse_file(frame_allocator: &HalFrameAllocatorWrapper, file: Vec<u8>) -> Option<crate::c_abi::boot_executable_info> {
     log::info!("Parsing elf file");
 
     let slice = file.as_slice();

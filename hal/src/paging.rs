@@ -19,7 +19,7 @@ use crate::memory::HalFrameAllocatorWrapper;
 use crate::memory::HalFrameAllocatorTrait;
 
 #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
-unsafe impl<T: HalFrameAllocatorTrait + 'static> FrameAllocator<Size4KiB> for HalFrameAllocatorWrapper<T> {
+unsafe impl FrameAllocator<Size4KiB> for HalFrameAllocatorWrapper {
     fn allocate_frame(&mut self) -> Option<PhysFrame> {
         let frame = self.alloc_frame()?;
         let frame = PhysFrame::<Size4KiB>::containing_address(PhysAddr::new(frame.get()));
@@ -28,25 +28,23 @@ unsafe impl<T: HalFrameAllocatorTrait + 'static> FrameAllocator<Size4KiB> for Ha
 }
 
 #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
-pub struct HalPageHierarchy<T: HalFrameAllocatorTrait + 'static> {
+pub struct HalPageHierarchy {
     page_table: OffsetPageTable<'static>,
-    frame_allocator: HalFrameAllocatorWrapper<T>,
+    frame_allocator: HalFrameAllocatorWrapper,
 }
 
 #[cfg(all(target_arch = "aarch64", any(target_os = "none", target_os= "uefi")))]
-pub struct HalPageHierarchy<T: HalFrameAllocatorTrait + 'static> {
-    _phantom: core::marker::PhantomData<T>,
+pub struct HalPageHierarchy {
 }
 
 #[cfg(target_os = "linux")]
-pub struct HalPageHierarchy<T: HalFrameAllocatorTrait + 'static> {
+pub struct HalPageHierarchy {
     physical_mem_fd: i32,
-    _phantom: core::marker::PhantomData<T>,
 }
 
-impl<T: HalFrameAllocatorTrait + 'static> HalPageHierarchy<T> {
+impl HalPageHierarchy {
     #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
-    pub fn init(table_page: u64, frame_alloc: HalFrameAllocatorWrapper<T>) -> Self {
+    pub fn init(table_page: u64, frame_alloc: HalFrameAllocatorWrapper) -> Self {
         unsafe {
             Self {
                 page_table: OffsetPageTable::new(&mut *(table_page as *const PageTable as *mut PageTable), VirtAddr::new(KERNEL_MEMORY_MAPPING_OFFSET)),
@@ -59,7 +57,6 @@ impl<T: HalFrameAllocatorTrait + 'static> HalPageHierarchy<T> {
     pub fn init(physical_mem_fd: i32) -> Self {
         Self {
             physical_mem_fd,
-            _phantom: core::marker::PhantomData,
         }
     }
     

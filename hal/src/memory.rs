@@ -1,17 +1,26 @@
+#[cfg(target_os = "none")]
+pub type HalFrameAllocator = HalBareFrameAllocator;
+
+#[cfg(target_os = "uefi")]
+pub type HalFrameAllocator = HalUefiFrameAllocator;
+
+#[cfg(target_os = "linux")]
+pub type HalFrameAllocator = HalMemfdFrameAllocator;
+
 pub trait HalFrameAllocatorTrait {
     fn alloc_frame(&self) -> Option<NonZero<u64>>;
     fn alloc_frames(&self, count: NonZero<usize>,) -> Option<NonZero<u64>>;
     fn dealloc_frame(&self, frame: NonZero<u64>);
 }
 
-pub struct HalFrameAllocatorWrapper<T: HalFrameAllocatorTrait + 'static> {
-    inner_allocator: &'static T,
+pub struct HalFrameAllocatorWrapper {
+    inner_allocator: &'static HalFrameAllocator,
 }
 
 use core::num::NonZero;
 
-impl<T: HalFrameAllocatorTrait + 'static> HalFrameAllocatorWrapper<T> {
-    pub fn new(allocator: &'static T) -> Self {
+impl HalFrameAllocatorWrapper {
+    pub fn new(allocator: &'static HalFrameAllocator) -> Self {
         Self {
             inner_allocator: allocator,
         }
@@ -30,6 +39,25 @@ impl<T: HalFrameAllocatorTrait + 'static> HalFrameAllocatorWrapper<T> {
     }
 }
 
+#[cfg(target_os = "none")]
+pub struct HalBareFrameAllocator {
+
+}
+
+#[cfg(target_os = "none")]
+impl HalFrameAllocatorTrait for HalBareFrameAllocator {
+    fn alloc_frame(&self) -> Option<NonZero<u64>> {
+        todo!();
+    }
+
+    fn alloc_frames(&self, count: NonZero<usize>,) -> Option<NonZero<u64>> {
+        todo!();
+    }
+
+    fn dealloc_frame(&self, frame: NonZero<u64>) {
+        todo!();
+    }
+}
 
 #[cfg(target_os = "uefi")]
 pub struct HalUefiFrameAllocator {

@@ -14,8 +14,8 @@ cp ./strap/target/x86_64-unknown-uefi/debug/strap.efi ./testing/esp/efi/boot/boo
 
 mkdir -p ./testing/linux
 cp ./strap/config_linux_example.toml ./testing/linux/config.toml
-cp ./strap/target/x86_64-unknown-linux-gnu/debug/strap ./testing/linux/strap.x86_64
-cp ./kernel/target/x86_64-unknown-none/debug/kernel ./testing/linux/kernel.x86_64
+cp ./strap/target/x86_64-unknown-linux-musl/debug/strap ./testing/linux/strap.x86_64
+cp ./kernel/target/x86_64-unknown-linux-musl/debug/kernel ./testing/linux/kernel.x86_64
 cp ./butler/target/x86_64-unknown-none/debug/butler ./testing/linux/butler.x86_64
 
 
