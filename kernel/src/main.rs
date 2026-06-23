@@ -1,5 +1,6 @@
 #![no_std]
 #![no_main]
+#![allow(static_mut_refs)]
 
 #[allow(non_upper_case_globals)]
 #[allow(non_camel_case_types)]
@@ -16,11 +17,21 @@ pub fn panic_handler(_info: &PanicInfo) -> ! {
     loop {}
 }
 
+use hal::cpu::HalProcessor;
+static mut BOOT_PROCESSOR: HalProcessor = HalProcessor::new();
+
 #[unsafe(no_mangle)]
 extern "C" fn _start() -> ! { 
     HalLogger::init();
+
     log::info!("hello, world!");
     log::info!("this is the kernel speaking!");
+
+    unsafe {
+        BOOT_PROCESSOR.init();
+    }
+    
+    log::info!("cpu initialised");
 
     loop {}
 }

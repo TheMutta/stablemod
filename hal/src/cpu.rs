@@ -43,9 +43,23 @@ pub struct HalProcessor {
     idt: InterruptDescriptorTable,
 }
 
+#[cfg(any(target_arch = "aarch64", target_os = "linux"))]
+pub struct HalProcessor {
+}
+
+#[cfg(any(target_arch = "aarch64", target_os = "linux"))]
+impl HalProcessor {
+    pub const fn new() -> Self {
+        Self { }
+    }
+    pub fn init(&mut self) {
+    }
+}
+ 
+
 #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 impl HalProcessor {
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         Self {
             gdt: GlobalDescriptorTable::new(),
             tss: TaskStateSegment::new(),
