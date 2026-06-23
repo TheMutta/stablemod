@@ -2,7 +2,7 @@ use alloc::vec::Vec;
 
 use elf::ElfBytes;
 use elf::file::Class;
-use elf::abi::{ELFOSABI_SYSV, ET_DYN, ET_EXEC, PT_LOAD, SHT_RELA, R_X86_64_RELATIVE};
+use elf::abi::{ELFOSABI_SYSV, ET_DYN, ET_EXEC, PT_LOAD, SHT_RELA, R_X86_64_RELATIVE, EM_X86_64, EM_AARCH64};
 use elf::endian::AnyEndian;
 use elf::segment::ProgramHeader;
 
@@ -19,10 +19,16 @@ pub fn elf_parse_file(frame_allocator: &HalFrameAllocatorWrapper, file: Vec<u8>)
     let ehdr = file.ehdr;
     if ehdr.class != Class::ELF64 ||
        ehdr.osabi != ELFOSABI_SYSV ||
-       !(ehdr.e_type == ET_EXEC || ehdr.e_type == ET_DYN) {
+       ( if cfg!(target_arch = "x86_64") {
+           ehdr.e_machine != EM_X86_64
+         } else if cfg!(target_arch = "aarch64") {
+             ehdr.e_machine != EM_AARCH64
+         } else { true }
+       ) || !(ehdr.e_type == ET_EXEC || ehdr.e_type == ET_DYN) {
         log::info!("Invalid elf file");
         return None;
     }
+
 
     let phdrs: Vec<ProgramHeader> = file.segments().expect("failed to parse phdr table").iter().filter(|phdr| phdr.p_type == PT_LOAD).collect();
 

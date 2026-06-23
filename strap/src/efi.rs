@@ -61,8 +61,24 @@ fn efi_main() -> Status {
     }
 
 
-    let kernel = efi_load_file(cstr16!("kernel.x86_64").into()).expect("could not load kernel");
-    let objman = efi_load_file(cstr16!("butler.x86_64").into()).expect("could not load objman");
+    let kernel = efi_load_file(
+        if cfg!(target_arch = "x86_64") {
+            cstr16!("kernel.x86_64").into()
+        } else if cfg!(target_arch = "aarch64") {
+            cstr16!("kernel.aarch64").into()
+        } else {
+            cstr16!("kernel.unknown").into()
+        }
+    ).expect("could not load kernel");
+    let objman = efi_load_file(
+        if cfg!(target_arch = "x86_64") {
+            cstr16!("butler.x86_64").into()
+        } else if cfg!(target_arch = "aarch64") {
+            cstr16!("butler.aarch64").into()
+        } else {
+            cstr16!("butler.unknown").into()
+        }
+    ).expect("could not load objman");
     let kernel = crate::elf::elf_parse_file(&frame_allocator, kernel).expect("could not parse kernel");
     let objman = crate::elf::elf_parse_file(&frame_allocator, objman).expect("could not parse objman");
 
@@ -108,6 +124,21 @@ fn efi_main() -> Status {
         core::arch::asm!(
             "mov rsp, {stack_ptr}",
             "jmp {entry}",
+            stack_ptr = in(reg) aligned_stack,
+            entry = in(reg) absolute_entry,
+            options(noreturn)
+        );
+    }
+
+    #[cfg(target_arch = "aarch64")]
+    unsafe {
+        let aligned_stack = stack_top & !0xF;
+        let absolute_entry = kernel.entry;
+        log::info!("jumping to {:X}:{:X}", absolute_entry, aligned_stack);
+        let _ = uefi::boot::exit_boot_services(None);
+        core::arch::asm!(
+            "mov sp, {stack_ptr}",
+            "br {entry}",
             stack_ptr = in(reg) aligned_stack,
             entry = in(reg) absolute_entry,
             options(noreturn)

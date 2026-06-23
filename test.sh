@@ -8,9 +8,16 @@ mkdir -p ./testing
 
 mkdir -p ./testing/esp/efi/boot/
 cp ./strap/config_uefi_example.toml ./testing/esp/config.toml
+
 cp ./kernel/target/x86_64-unknown-none/debug/kernel ./testing/esp/kernel.x86_64
 cp ./butler/target/x86_64-unknown-none/debug/butler ./testing/esp/butler.x86_64
+
+cp ./kernel/target/aarch64-unknown-none/debug/kernel ./testing/esp/kernel.aarch64
+cp ./butler/target/aarch64-unknown-none/debug/butler ./testing/esp/butler.aarch64
+
 cp ./strap/target/x86_64-unknown-uefi/debug/strap.efi ./testing/esp/efi/boot/bootx64.efi
+cp ./strap/target/aarch64-unknown-uefi/debug/strap.efi ./testing/esp/efi/boot/bootaa64.efi
+
 
 mkdir -p ./testing/linux
 cp ./strap/config_linux_example.toml ./testing/linux/config.toml
@@ -46,12 +53,13 @@ case $ARCH in
 	"aarch64-unknown-uefi")
 		qemu-system-aarch64 \
 			-machine virt \
-			-m 128M \
+			-m 256M \
 			-cpu max \
 			-smp 6 \
 			-drive if=pflash,format=raw,readonly=on,file=./testing/bios/efi/aarch64/code.fd \
 			-drive format=raw,file=fat:rw:testing/esp \
 			-device virtio-gpu-pci \
+			-display none \
 			-serial stdio
 		;;
 	"riscv64-unknown-uefi")

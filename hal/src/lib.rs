@@ -3,6 +3,7 @@
 
 extern crate alloc;
 
+pub mod vm;
 pub mod paging;
 pub mod memory;
 pub mod cpu;
