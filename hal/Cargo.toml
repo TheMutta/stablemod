@@ -24,3 +24,10 @@ syscalls = { version = "0.8.1", default-features = false }
 
 [target.aarch64-unknown-uefi.dependencies]
 uefi = "0.37.0"
+aarch64-paging = { version = "0.12.1", default-features = false }
+aarch64-cpu = "11.2.0"
+
+[target.aarch64-unknown-none.dependencies]
+aarch64-paging = { version = "0.12.1", default-features = false }
+aarch64-cpu = "11.2.0"
+

@@ -2,7 +2,7 @@ use alloc::vec::Vec;
 
 use elf::ElfBytes;
 use elf::file::Class;
-use elf::abi::{ELFOSABI_SYSV, ET_DYN, ET_EXEC, PT_LOAD, SHT_RELA, R_X86_64_RELATIVE, EM_X86_64, EM_AARCH64};
+use elf::abi::{ELFOSABI_SYSV, ET_DYN, ET_EXEC, PT_LOAD, SHT_RELA, R_X86_64_RELATIVE, EM_X86_64, EM_AARCH64, PF_W, PF_R, PF_X, PF_NONE};
 use elf::endian::AnyEndian;
 use elf::segment::ProgramHeader;
 
@@ -10,7 +10,9 @@ use hal::memory::*;
 use core::num::NonZero;
 use core::ptr::NonNull;
 
-pub fn elf_parse_file(frame_allocator: &HalFrameAllocatorWrapper, file: Vec<u8>) -> Option<crate::c_abi::boot_executable_info> {
+use hal::paging::*;
+
+pub fn elf_parse_file(page_hierarchy: &mut HalPageHierarchy, frame_allocator: &HalFrameAllocatorWrapper, file: Vec<u8>) -> Option<crate::c_abi::boot_executable_info> {
     log::info!("Parsing elf file");
 
     let slice = file.as_slice();
@@ -54,10 +56,23 @@ pub fn elf_parse_file(frame_allocator: &HalFrameAllocatorWrapper, file: Vec<u8>)
 
                 log::info!("Mem range from 0x{:X}", pages.get());
                 let pages = unsafe { NonNull::new_unchecked(pages.get() as *const u8 as *mut u8) };
+                let pages_u64 = pages.as_ptr() as u64;
 
                 unsafe { core::ptr::write_bytes(pages.as_ptr(), 0, total_bytes); }
 
                 phdrs.iter().for_each(|phdr| {
+                    if phdr.p_flags == PF_NONE {
+                        page_hierarchy.mapping(pages_u64 + phdr.p_vaddr, pages_u64 + phdr.p_vaddr, HalPageFlags::N, phdr.p_memsz as usize);
+                    } else if phdr.p_flags == PF_R {
+                        page_hierarchy.mapping(pages_u64 + phdr.p_vaddr, pages_u64 + phdr.p_vaddr, HalPageFlags::R, phdr.p_memsz as usize);
+                    } else if phdr.p_flags == PF_R | PF_W {
+                        page_hierarchy.mapping(pages_u64 + phdr.p_vaddr, pages_u64 + phdr.p_vaddr, HalPageFlags::RW, phdr.p_memsz as usize);
+                    } else if phdr.p_flags == PF_R | PF_X {
+                        page_hierarchy.mapping(pages_u64 + phdr.p_vaddr, pages_u64 + phdr.p_vaddr, HalPageFlags::RE, phdr.p_memsz as usize);
+                    } else {
+                        panic!("invalid combination {}", phdr.p_flags);
+                    }
+
                     unsafe {
                         core::ptr::copy_nonoverlapping(&slice[phdr.p_offset as usize], pages.add(phdr.p_vaddr as usize).as_ptr(), phdr.p_filesz as usize);
                     }

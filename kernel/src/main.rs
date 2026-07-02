@@ -10,6 +10,7 @@ pub mod c_abi {
 }
 
 use hal::log::HalLogger;
+use hal::paging::HalPageHierarchy;
 
 use core::panic::PanicInfo;
 #[panic_handler]
@@ -38,12 +39,10 @@ extern "C" fn _start(bootloader_data: *const crate::c_abi::boot_loader_data) -> 
     if bootloader_data.signature != crate::c_abi::BOOTLOADER_SIGNATURE {
         panic!("Invalid bootloader data!");
     }
+
     log::info!("bootloader data: {:#?}", bootloader_data);
 
-    #[cfg(all(target_arch = "x86_64", target_os = "none"))]
-    unsafe {
-        core::arch::asm!("int 3");
-    }
+    log::info!("kernel execution finished, handing off!");
 
     loop {}
 }

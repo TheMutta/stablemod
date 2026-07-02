@@ -29,6 +29,8 @@ use core::ptr::NonNull;
 use crate::config::StrapConfig;
 use alloc::boxed::Box;
 use hal::memory::*;
+use hal::log::HalLogger;
+use hal::paging::{HalPageHierarchy, HalPageFlags};
 use core::num::NonZero;
 
 use uefi::system::with_config_table;
@@ -37,14 +39,24 @@ use uefi::println;
 
 #[entry]
 fn efi_main() -> Status { 
+    HalLogger::init();
     uefi::helpers::init().unwrap();
 
     let uefi_allocator = Box::leak(Box::new(HalUefiFrameAllocator::new()));
     let frame_allocator = HalFrameAllocatorWrapper::new(uefi_allocator);
+    let mut page_hierarchy = HalPageHierarchy::init({
+        let page = uefi::boot::allocate_pages(uefi::boot::AllocateType::AnyPages, uefi::boot::MemoryType::LOADER_DATA, 1).unwrap().as_ptr();
+        unsafe {
+            page.write_bytes(0x00, 4096);
+        }
+        page as u64
+     }, frame_allocator.clone());
 
     let mut bootloader_info: NonNull<crate::c_abi::boot_loader_data> = {
         let page_count = size_of::<crate::c_abi::boot_loader_data>() / uefi::boot::PAGE_SIZE;
         let page = uefi::boot::allocate_pages(uefi::boot::AllocateType::AnyPages, uefi::boot::MemoryType::LOADER_DATA, page_count).expect("could not allocate bootloader data");
+    
+        page_hierarchy.mapping(page.as_ptr() as u64, page.as_ptr() as u64, HalPageFlags::R, page_count * 4096);
 
         unsafe {
             let ptr = NonNull::new_unchecked(page.as_ptr() as *mut crate::c_abi::boot_loader_data);
@@ -53,6 +65,7 @@ fn efi_main() -> Status {
             ptr
         }
     };
+
 
     match efi_load_file(cstr16!("config.toml").into()) {
         Ok(config) => {
@@ -83,8 +96,8 @@ fn efi_main() -> Status {
             cstr16!("butler.unknown").into()
         }
     ).expect("could not load objman");
-    let kernel = crate::elf::elf_parse_file(&frame_allocator, kernel).expect("could not parse kernel");
-    let objman = crate::elf::elf_parse_file(&frame_allocator, objman).expect("could not parse objman");
+    let kernel = crate::elf::elf_parse_file(&mut page_hierarchy, &frame_allocator, kernel).expect("could not parse kernel");
+    let objman = crate::elf::elf_parse_file(&mut page_hierarchy, &frame_allocator, objman).expect("could not parse objman");
 
     unsafe {
         core::ptr::write(&mut bootloader_info.as_mut().kernel_executable, kernel);
@@ -159,6 +172,7 @@ fn efi_main() -> Status {
     });
 
     let stack_bottom = frame_allocator.alloc_frames(NonZero::new(16).unwrap()).expect("alloced_frames").get();
+    page_hierarchy.mapping(stack_bottom, stack_bottom, HalPageFlags::RW, 16* 4096);
     let stack_top = stack_bottom + 16 * 4096;
 
     log::info!("stack top {:X}", stack_top);

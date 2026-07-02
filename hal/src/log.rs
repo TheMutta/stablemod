@@ -65,21 +65,21 @@ impl log::Log for HalLogger {
             #[cfg(all(target_os = "none", target_arch = "x86_64"))]
             {
                 let mut writer = PortWriter;
-                let _ = write!(writer, "{} - {}\n", record.level(), record.args());
+                let _ = write!(writer, "[{} {}] - {}\n", record.level(), record.target(), record.args());
             }
 
             #[cfg(target_os = "uefi")]
             {
                 use uefi::println;
 
-                println!("{} - {}", record.level(), record.args());
+                println!("[{} {}] - {}\n", record.level(), record.target(), record.args());
             }
 
             #[cfg(target_os = "linux")]
             {
                 let mut writer = SyscallWriter;
                 // This writes directly to the syscall, no intermediate String/vec
-                let _ = write!(writer, "{} - {}\n", record.level(), record.args());
+                let _ = write!(writer, "[{} {}] - {}\n", record.level(), record.target(), record.args());
             }
         }
     }

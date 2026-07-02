@@ -4,7 +4,7 @@ use alloc::boxed::Box;
 use hal::log::HalLogger;
 use crate::elf::elf_parse_file;
 use std::num::NonZero;
-
+use hal::paging::{HalPageHierarchy, HalPageFlags};
 
 pub fn main() {
     HalLogger::init();
@@ -42,11 +42,13 @@ pub fn main() {
 
     let memfd_allocator = Box::leak(Box::new(HalMemfdFrameAllocator::new(physical_memory_offset, ram_size)));
     let frame_allocator = HalFrameAllocatorWrapper::new(memfd_allocator);
+    todo!();
+    let mut page_hierarchy = HalPageHierarchy::init(0, frame_allocator.clone());
 
     let kernel = std::fs::read("kernel.x86_64").expect("could not load kernel");
     let objman = std::fs::read("butler.x86_64").expect("could not load objman");
-    let kernel = elf_parse_file(&frame_allocator, kernel).expect("could not parse kernel");
-    let objman = elf_parse_file(&frame_allocator, objman).expect("could not parse objman");
+    let kernel = elf_parse_file(&mut page_hierarchy, &frame_allocator, kernel).expect("could not parse kernel");
+    let objman = elf_parse_file(&mut page_hierarchy, &frame_allocator, objman).expect("could not parse objman");
     bootloader_info.kernel_executable = kernel;
     bootloader_info.objman_executable = objman;
 

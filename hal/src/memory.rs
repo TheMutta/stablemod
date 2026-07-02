@@ -13,6 +13,7 @@ pub trait HalFrameAllocatorTrait {
     fn dealloc_frame(&self, frame: NonZero<u64>);
 }
 
+#[derive(Clone)]
 pub struct HalFrameAllocatorWrapper {
     inner_allocator: &'static HalFrameAllocator,
 }

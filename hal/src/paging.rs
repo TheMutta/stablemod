@@ -9,6 +9,7 @@ use x86_64::{
 };
 
 pub enum HalPageFlags {
+    N,
     R,
     RE,
     RW,
@@ -33,8 +34,12 @@ pub struct HalPageHierarchy {
     frame_allocator: HalFrameAllocatorWrapper,
 }
 
+use core::ptr::NonNull;
+
 #[cfg(all(target_arch = "aarch64", any(target_os = "none", target_os= "uefi")))]
 pub struct HalPageHierarchy {
+    root_page_table: NonNull<u64>,
+    frame_allocator: HalFrameAllocatorWrapper,
 }
 
 #[cfg(target_os = "linux")]
@@ -43,44 +48,62 @@ pub struct HalPageHierarchy {
 }
 
 impl HalPageHierarchy {
-    #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
     pub fn init(table_page: u64, frame_alloc: HalFrameAllocatorWrapper) -> Self {
+        #[cfg(all(target_arch = "aarch64", any(target_os = "none", target_os= "uefi")))]
         unsafe {
             Self {
-                page_table: OffsetPageTable::new(&mut *(table_page as *const PageTable as *mut PageTable), VirtAddr::new(KERNEL_MEMORY_MAPPING_OFFSET)),
+                root_page_table: NonNull::new_unchecked(table_page as *mut u64),
                 frame_allocator: frame_alloc,
             }
         }
-    }
-
-    #[cfg(target_os = "linux")]
-    pub fn init(physical_mem_fd: i32) -> Self {
+        #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
+        unsafe {
+            Self {
+                page_table: OffsetPageTable::new(&mut *(table_page as *const PageTable as *mut PageTable), VirtAddr::new(0)),
+                frame_allocator: frame_alloc,
+            }
+        }
+    
+        #[cfg(target_os = "linux")]
         Self {
-            physical_mem_fd,
+            physical_mem_fd: table_page as i32,
         }
     }
-    
-    pub fn mapping(&mut self, phys_addr: u64, virt_addr: u64, flags: HalPageFlags) {
+
+    pub fn mapping(&mut self, phys_addr: u64, virt_addr: u64, flags: HalPageFlags, length: usize) {
+        #[cfg(all(target_arch = "aarch64", any(target_os = "none", target_os= "uefi")))]
+        {
+            use aarch64_paging::{
+                paging::MemoryRegion,
+                Mapping
+            };
+            let region = MemoryRegion::new(virt_addr as usize, virt_addr as usize + length);
+
+        }
         #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
         {
             use x86_64::structures::paging::PageTableFlags as Flags;
 
-            let frame = PhysFrame::<Size4KiB>::containing_address(PhysAddr::new(phys_addr));
-            let page = Page::containing_address(VirtAddr::new(virt_addr));
             let flags = match flags {
+                HalPageFlags::N => Flags::NO_EXECUTE,
                 HalPageFlags::R => Flags::PRESENT | Flags::NO_EXECUTE,
                 HalPageFlags::RE => Flags::PRESENT,
                 HalPageFlags::RW => Flags::PRESENT | Flags::WRITABLE | Flags::NO_EXECUTE,
                 HalPageFlags::RWE => Flags::PRESENT | Flags::WRITABLE,
             };
 
-            let map_to_result = unsafe {
-                self.page_table.map_to(page, frame, flags, &mut self.frame_allocator)
-            };
-            map_to_result.expect("map_to failed").flush();
+            for off in (0..length).step_by(4096) {
+                let frame = PhysFrame::<Size4KiB>::containing_address(PhysAddr::new(phys_addr + off as u64));
+                let page = Page::containing_address(VirtAddr::new(virt_addr + off as u64));
+                let map_to_result = unsafe {
+                    self.page_table.map_to(page, frame, flags, &mut self.frame_allocator)
+                };
+                map_to_result.expect("map_to failed").flush();
+            }
         }
         #[cfg(target_os = "linux")]
         unsafe {
+            const PROT_NONE: i32 = 0;
             const PROT_READ: i32 = 0x1;
             const PROT_WRITE: i32 = 0x2;
             const PROT_EXEC: i32 = 0x4;
@@ -89,6 +112,7 @@ impl HalPageHierarchy {
             const MAP_ANONYMOUS: i32 = 0x20;
             const MAP_FIXED: i32 = 0x10;
             let prot = match flags {
+                HalPageFlags::N => PROT_NONE,
                 HalPageFlags::R => PROT_READ,
                 HalPageFlags::RE => PROT_READ | PROT_EXEC,
                 HalPageFlags::RW => PROT_READ | PROT_WRITE,
@@ -100,7 +124,7 @@ impl HalPageHierarchy {
             let ret = unsafe { syscalls::syscall!(
                 syscalls::Sysno::mmap,
                 virt_addr as *mut core::ffi::c_void,
-                4096, // Size4KiB
+                length,
                 prot,
                 flags,
                 self.physical_mem_fd,

@@ -1,3 +1,74 @@
+#[cfg(target_os = "linux")]
+pub struct HalProcessor {
+}
+
+#[cfg(target_os = "linux")]
+impl HalProcessor {
+    pub const fn new() -> Self {
+        Self { }
+    }
+    pub fn init(&mut self) {
+    }
+}
+ 
+
+#[cfg(target_arch = "aarch64")]
+pub struct HalProcessor {
+}
+
+#[cfg(target_arch = "aarch64")]
+use aarch64_cpu::registers::Writeable;
+
+#[cfg(target_arch = "aarch64")]
+#[unsafe(no_mangle)]
+#[unsafe(link_section = ".text.exceptions")]
+pub unsafe extern "C" fn exception_vector_table() {
+    core::arch::asm!(
+        ".balign 2048",
+        // Current EL with SP0 (Synchronous, IRQ, FIQ, SError)
+        ".balign 0x80", "b exception_handler",
+        ".balign 0x80", "b exception_handler",
+        ".balign 0x80", "b exception_handler",
+        ".balign 0x80", "b exception_handler",
+
+        // Current EL with SPx
+        ".balign 0x80", "b exception_handler",
+        ".balign 0x80", "b exception_handler",
+        ".balign 0x80", "b exception_handler",
+        ".balign 0x80", "b exception_handler",
+        options(noreturn)
+    );
+}
+
+#[unsafe(no_mangle)]
+#[cfg(target_arch = "aarch64")]
+pub extern "C" fn exception_handler() {
+    // Your panic/handling logic here
+    loop {}
+}
+
+#[cfg(target_arch = "aarch64")]
+impl HalProcessor {
+    pub unsafe fn init_exceptions() {
+        use aarch64_cpu::registers::VBAR_EL1;
+        // Set the Vector Base Address Register (VBAR_EL1)
+        VBAR_EL1.set(exception_vector_table as usize as u64);
+        core::arch::asm!("isb");
+    }
+
+    pub const fn new() -> Self {
+        Self {
+
+        }
+    }
+
+    pub fn init(&mut self) {
+        use aarch64_cpu::registers::{CPACR_EL1, SP_EL1, SPSel};
+        CPACR_EL1.write(CPACR_EL1::FPEN::TrapNothing);
+    }
+
+}
+
 #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 use x86_64::{
     addr::VirtAddr,
@@ -42,20 +113,6 @@ pub struct HalProcessor {
     tss: TaskStateSegment,
     idt: InterruptDescriptorTable,
 }
-
-#[cfg(any(target_arch = "aarch64", target_os = "linux"))]
-pub struct HalProcessor {
-}
-
-#[cfg(any(target_arch = "aarch64", target_os = "linux"))]
-impl HalProcessor {
-    pub const fn new() -> Self {
-        Self { }
-    }
-    pub fn init(&mut self) {
-    }
-}
- 
 
 #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 impl HalProcessor {
