@@ -22,7 +22,7 @@ cp ./strap/target/aarch64-unknown-uefi/debug/strap.efi ./testing/esp/efi/boot/bo
 mkdir -p ./testing/linux
 cp ./strap/config_linux_example.toml ./testing/linux/config.toml
 cp ./strap/target/x86_64-unknown-linux-musl/debug/strap ./testing/linux/strap.x86_64
-cp ./kernel/target/x86_64-unknown-linux-stablemod/debug/kernel ./testing/linux/kernel.x86_64
+#cp ./kernel/target/x86_64-unknown-linux-stablemod/debug/kernel ./testing/linux/kernel.x86_64
 cp ./butler/target/x86_64-unknown-none/debug/butler ./testing/linux/butler.x86_64
 
 

@@ -2,6 +2,7 @@ const KERNEL_MEMORY_MAPPING_OFFSET: u64 = 0xFFFF800000000000;
 
 #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 use x86_64::{
+    registers::control::{Cr3, Cr3Flags},
     structures::paging::{
         FrameAllocator, Mapper, OffsetPageTable, Page, PageTable, PhysFrame, Size4KiB,
     },
@@ -130,6 +131,27 @@ impl HalPageHierarchy {
                 self.physical_mem_fd,
                 phys_addr
             ).unwrap() };
+        }
+    }
+
+    pub fn get_root(&self) -> u64 {
+        #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
+        {
+            self.page_table.level_4_table() as *const _ as u64
+        }
+        #[cfg(all(target_arch = "aarch64", any(target_os = "none", target_os= "uefi")))]
+        todo!();
+
+        #[cfg(target_os = "linux")]
+        todo!();
+    }
+
+    pub fn switch(&self) {
+        #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
+        unsafe {
+            let (_, flags) = Cr3::read();
+            let frame = PhysFrame::<Size4KiB>::from_start_address(PhysAddr::new(self.page_table.level_4_table() as *const _ as u64)).unwrap();
+            Cr3::write(frame, flags);
         }
     }
 }

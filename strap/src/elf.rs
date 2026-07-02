@@ -105,7 +105,7 @@ pub fn elf_parse_file(page_hierarchy: &mut HalPageHierarchy, frame_allocator: &H
                     physical_base: pages.as_ptr() as u64,
                     virtual_base: pages.as_ptr() as u64,
                     entry: entry as u64,
-                    virtual_space: 0,
+                    virtual_space: page_hierarchy.get_root(),
                     pages: crate::c_abi::boot_executable_info_page_counts {
                         text_pages: 0,
                         rodata_pages: 0,

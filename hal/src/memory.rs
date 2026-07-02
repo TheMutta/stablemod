@@ -46,6 +46,11 @@ pub struct HalBareFrameAllocator {
 }
 
 #[cfg(target_os = "none")]
+impl HalBareFrameAllocator {
+    pub const fn new() -> Self { Self {} }
+}
+
+#[cfg(target_os = "none")]
 impl HalFrameAllocatorTrait for HalBareFrameAllocator {
     fn alloc_frame(&self) -> Option<NonZero<u64>> {
         todo!();
