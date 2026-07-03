@@ -36,6 +36,10 @@ use core::num::NonZero;
 use uefi::system::with_config_table;
 use uefi::table::cfg::ConfigTableEntry;
 use uefi::println;
+use uefi::proto::rng::*;
+
+use kernel::ResourceCapability;
+use kernel::ResourceCapabilityArena;
 
 #[entry]
 fn efi_main() -> Status { 
@@ -149,16 +153,33 @@ fn efi_main() -> Status {
 
 
 
-    let mut root_capability_arena: NonNull<crate::c_abi::resource_capability_arena> = {
+    let mut root_capability_arena: NonNull<ResourceCapabilityArena> = {
         let page_count = 4; // TODO
         let page = uefi::boot::allocate_pages(uefi::boot::AllocateType::AnyPages, uefi::boot::MemoryType::LOADER_DATA, page_count).expect("could not allocate root arena");
 
-        let addr = page.as_ptr() as *mut crate::c_abi::resource_capability_arena; 
+        let addr = page.as_ptr() as *mut ResourceCapabilityArena;
         unsafe { 
             bootloader_info.as_mut().kernel_executable.arenas.root_resource_capability_arena = addr as u64;
 
             let ptr = NonNull::new_unchecked(addr);
             ptr.write_bytes(0x00, page_count);
+
+            // TODO: fill rng data
+            let mut rng_data = [0u8; size_of::<u64>() * 2];
+
+            let arenaid = u64::from_le_bytes(rng_data[0..8].try_into().unwrap());
+            let slots = 0;
+            let slots_free = 0;
+
+            let permissions = 0;
+            let resource = ptr.as_ptr() as u64;
+            let size = page_count as u64 * 4096;
+            let genid = u64::from_le_bytes(rng_data[8..16].try_into().unwrap());
+            let derived_refs = 0;
+            let virtual_refs = 0;
+            let arena_cap = ResourceCapability::new(permissions, resource, size, genid, derived_refs, virtual_refs);
+
+            core::ptr::write(ptr.as_ptr(), ResourceCapabilityArena::new(arenaid, slots, slots_free, arena_cap));
 
             ptr
         }

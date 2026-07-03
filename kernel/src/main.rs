@@ -41,16 +41,8 @@ batch_syscalls!(
 extern "C" fn _start(bootloader_data: *const crate::c_abi::boot_loader_data) -> ! { 
     HalLogger::init();
 
-    let frame_allocator = unsafe { HalFrameAllocatorWrapper::new(&FRAME_ALLOCATOR) };
-
     log::info!("hello, world!");
     log::info!("this is the kernel speaking!");
-
-    unsafe {
-        BOOT_PROCESSOR.init();
-    }
-    
-    log::info!("cpu initialised");
 
     let bootloader_data = unsafe { &(*bootloader_data) };
     if bootloader_data.signature != crate::c_abi::BOOTLOADER_SIGNATURE {
@@ -58,6 +50,17 @@ extern "C" fn _start(bootloader_data: *const crate::c_abi::boot_loader_data) -> 
     }
 
     log::info!("bootloader data: {:#?}", bootloader_data);
+
+    let frame_allocator = unsafe {
+        //FRAME_ALLOCATOR.init();
+        HalFrameAllocatorWrapper::new(&FRAME_ALLOCATOR)
+    };
+
+    unsafe {
+        BOOT_PROCESSOR.init();
+    }
+    
+    log::info!("cpu initialised");
 
     let page_hierarchy = HalPageHierarchy::init(bootloader_data.kernel_executable.virtual_space, frame_allocator.clone());
     page_hierarchy.switch();

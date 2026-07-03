@@ -4,6 +4,7 @@ fn main() {
     let bindings = bindgen::Builder::default()
         .header("../abi.h")
         .clang_arg("--target=x86_64-unknown-linux-musl")
+        .derive_default(true)
         .use_core()
         .generate()
         .expect("unable to generate bindings");
