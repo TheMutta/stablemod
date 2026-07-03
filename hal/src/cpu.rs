@@ -316,6 +316,21 @@ extern "x86-interrupt" fn security_exception_handler(_isf: InterruptStackFrame, 
 }
 
 #[inline(always)]
+pub unsafe fn do_userland_jump(userland_ip: u64, userland_sp: u64) {
+    #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
+    unsafe {
+        core::arch::asm!(
+            //"mov rsp, rax",
+	    "mov r11, 0x202",
+            "sysretq",
+            in("rax") userland_sp,
+            in("rcx") userland_ip,
+            options(noreturn),
+        );
+    }
+}
+
+#[inline(always)]
 pub unsafe fn do_syscall(sys_num: usize, arg1: usize, arg2: usize, arg3: usize, arg4: usize, arg5: usize, arg6: usize) -> usize {
     let mut ret: usize = 0;
 
@@ -408,11 +423,21 @@ macro_rules! batch_syscalls {
                 "dispatch_syscall:",
                 "   cmp rax, {NR_SYS}",
                 "   jae .invalid_syscall",
+                
+                "   push rcx",
+                "   push r11",
+
                 "   lea r11, [rip + syscall_table]",
                 "   movsxd rax, dword ptr [r11 + 4 * rax]",
                 "   add rax, r11",
+
                 "   mov rcx, r10", // 4th arg
-                "   jmp rax",
+                                   
+                "   call rax",
+                
+                "   pop r11",
+                "   pop rcx",
+                "   sysretq",
                 ".invalid_syscall:",
                 "   mov rax, -1",
                 "   sysretq",

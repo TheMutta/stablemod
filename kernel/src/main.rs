@@ -21,6 +21,7 @@ pub fn panic_handler(info: &PanicInfo) -> ! {
 }
 
 use hal::cpu::HalProcessor;
+use hal::cpu::do_userland_jump;
 use hal::batch_syscalls;
 static mut BOOT_PROCESSOR: HalProcessor = HalProcessor::new();
 static mut FRAME_ALLOCATOR: HalBareFrameAllocator = HalBareFrameAllocator::new();
@@ -28,7 +29,6 @@ static mut FRAME_ALLOCATOR: HalBareFrameAllocator = HalBareFrameAllocator::new()
 extern "C" fn sys_debug( count: usize) -> usize {
     log::info!("write!");
 
-    loop {}
     0
 }
 
@@ -62,6 +62,10 @@ extern "C" fn _start(bootloader_data: *const crate::c_abi::boot_loader_data) -> 
     page_hierarchy.switch();
 
     log::info!("kernel execution finished, handing off!");
+
+    unsafe {
+        do_userland_jump(bootloader_data.objman_executable.entry, 0);
+    }
 
     loop {}
 }

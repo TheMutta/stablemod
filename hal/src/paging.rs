@@ -91,7 +91,7 @@ impl HalPageHierarchy {
                 HalPageFlags::RE => Flags::PRESENT,
                 HalPageFlags::RW => Flags::PRESENT | Flags::WRITABLE | Flags::NO_EXECUTE,
                 HalPageFlags::RWE => Flags::PRESENT | Flags::WRITABLE,
-            };
+            } | Flags::USER_ACCESSIBLE;
 
             for off in (0..length).step_by(4096) {
                 let frame = PhysFrame::<Size4KiB>::containing_address(PhysAddr::new(phys_addr + off as u64));

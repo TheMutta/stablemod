@@ -35,6 +35,9 @@ use hal::syscall;
 #[unsafe(no_mangle)]
 fn _start() {
     syscall!(0, 1);
+    syscall!(0, 1);
+    syscall!(0, 1);
+    syscall!(0, 1);
 
 
     loop {}
