@@ -26,8 +26,9 @@ use hal::batch_syscalls;
 static mut BOOT_PROCESSOR: HalProcessor = HalProcessor::new();
 static mut FRAME_ALLOCATOR: HalBareFrameAllocator = HalBareFrameAllocator::new();
 
-extern "C" fn sys_debug( count: usize) -> usize {
-    log::info!("write!");
+extern "C" fn sys_debug(s: *const u8, count: usize) -> usize {
+    let slice = unsafe { core::slice::from_raw_parts(s, count) };
+    log::info!("userspace says: {}", str::from_utf8(slice).unwrap());
 
     0
 }

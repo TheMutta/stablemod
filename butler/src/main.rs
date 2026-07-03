@@ -32,13 +32,34 @@ static mut GLOBAL_ALLOC: BaseAlloc = BaseAlloc;
 
 use hal::syscall;
 
+pub struct LogWriter;
+
+impl core::fmt::Write for LogWriter {
+    fn write_str(&mut self, s: &str) -> core::fmt::Result {
+        unsafe {
+            // Trigger your macro: syscall!(num, arg1, arg2, arg3)
+            syscall!(
+                0, 
+                s.as_ptr() as usize, 
+                s.len()
+            );
+        }
+        Ok(())
+    }
+}
+
+#[macro_export]
+macro_rules! print {
+    ($($arg:tt)*) => {{
+        use core::fmt::Write;
+        let _ = write!($crate::LogWriter, $($arg)*);
+    }};
+}
+
 #[unsafe(no_mangle)]
 fn _start() {
-    syscall!(0, 1);
-    syscall!(0, 1);
-    syscall!(0, 1);
-    syscall!(0, 1);
-
+    print!("Hello, world!");
+    print!("Butler is alive!");
 
     loop {}
 }
