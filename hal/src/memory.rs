@@ -40,20 +40,127 @@ impl HalFrameAllocatorWrapper {
     }
 }
 
+use core::ptr::NonNull;
+use core::sync::atomic::AtomicU64;
+
 #[cfg(target_os = "none")]
 pub struct HalBareFrameAllocator {
+    pointer: UnsafeCell<NonNull<u8>>,
+    size: usize,
+    page_size: usize,
 
+    memory_base: u64,
+    memory_top: u64,
+
+    last_free_page: AtomicU64,
 }
 
 #[cfg(target_os = "none")]
 impl HalBareFrameAllocator {
-    pub const fn new() -> Self { Self {} }
+    pub const fn new() -> Self {
+        Self {
+            pointer: UnsafeCell::new(NonNull::dangling()),
+            size: 0,
+            page_size: 0,
+
+            memory_base: 0,
+            memory_top: 0,
+
+            last_free_page: AtomicU64::new(0),
+        }
+    }
+
+    pub fn init(&mut self, pointer: NonNull<u8>, size: usize, memory_base: u64, memory_top: u64) {
+        self.pointer =  UnsafeCell::new(pointer);
+        self.size = size;
+        self.page_size = 0x1000;
+        self.memory_base = memory_base;
+        self.memory_top = memory_top;
+        self.last_free_page = AtomicU64::default();
+
+        self.set_all_full();
+    }
+
+    fn set_all_full(&self) {
+        for i in 0..self.size {
+            unsafe { *(*self.pointer.get()).as_ptr().add(i) = 0xff; }
+        }
+    }
+
+    fn calculate_page_offset(&self, page: u64) -> Option<(usize, usize)> {
+        if page < self.memory_base || page >= self.memory_top || page % self.page_size as u64 != 0 {
+            None
+        } else {
+            let offset = (page - self.memory_base) / self.page_size as u64;
+            let byte_offset = offset / 8;
+            let bit_offset = offset % 8;
+            Some((byte_offset as usize, bit_offset as usize))
+        }
+    }
 }
+
+pub struct BitmapUtils;
+impl BitmapUtils {
+    pub fn calculate_mask(offset: usize) -> u8 {
+        1 << (offset % 8)
+    }
+
+    pub fn is_bit_set(byte: u8, mask: u8) -> bool {
+        if (byte & mask) != 0 {
+            true
+        } else {
+            false
+        }
+    }
+
+    pub fn set_bit(mut byte: u8, mask: u8) -> u8 {
+        byte |= mask;
+
+        byte
+    }
+
+    pub fn unset_bit(mut byte: u8, mask: u8) -> u8 {
+        byte &= !mask;
+
+        byte
+    }
+}
+
 
 #[cfg(target_os = "none")]
 impl HalFrameAllocatorTrait for HalBareFrameAllocator {
     fn alloc_frame(&self) -> Option<NonZero<u64>> {
-        todo!();
+        // TODO: Do it allowing for the struct to not be passed as mut
+        /*if let Some(page) = self.last_free_page {
+        // TODO: We could probably check next + prev to find a new candidate
+        self.last_free_page = None;
+
+        let (byte_offset, bit_offset) = self.calculate_page_offset(page)?;
+        let mask = Self::calculate_mask(bit_offset);
+
+        let byte = unsafe { *self.pointer.add(byte_offset) };
+        let byte = Self::set_bit(byte, mask);
+        unsafe { *self.pointer.add(byte_offset) = byte };
+
+        Ok(page)
+        } else {
+        }*/
+        for byte_offset in 0..self.size {
+            let byte = unsafe { *(*self.pointer.get()).as_ptr().add(byte_offset) };
+            if byte != 0xff {
+                for bit_offset in 0..8 {
+                    let mask = BitmapUtils::calculate_mask(bit_offset);
+                    if !BitmapUtils::is_bit_set(byte, mask) {
+                        let byte = BitmapUtils::set_bit(byte, mask);
+                        unsafe { *(*self.pointer.get()).as_ptr().add(byte_offset) = byte };
+                        let page = (byte_offset * 8 + bit_offset) as u64 * self.page_size as u64 + self.memory_base;
+
+                        return Some(NonZero::new(page).unwrap());
+                    }
+                }
+            }
+        }
+        None
     }
 
     fn alloc_frames(&self, count: NonZero<usize>,) -> Option<NonZero<u64>> {
@@ -61,7 +168,15 @@ impl HalFrameAllocatorTrait for HalBareFrameAllocator {
     }
 
     fn dealloc_frame(&self, frame: NonZero<u64>) {
-        todo!();
+        // TODO: Add the just freed page to the index
+        let page = frame.get();
+
+        let (byte_offset, bit_offset) = self.calculate_page_offset(page).unwrap();
+        let mask = BitmapUtils::calculate_mask(bit_offset);
+
+        let byte = unsafe { *(*self.pointer.get()).as_ptr().add(byte_offset) };
+        let byte = BitmapUtils::unset_bit(byte, mask);
+        unsafe { *(*self.pointer.get()).as_ptr().add(byte_offset) = byte };
     }
 }
 

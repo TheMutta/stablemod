@@ -87,8 +87,5 @@ unsafe impl GlobalAlloc for BaseAlloc {
     }
 }
 
-
-
-
 #[global_allocator]
 static mut GLOBAL_ALLOC: BaseAlloc = BaseAlloc;
