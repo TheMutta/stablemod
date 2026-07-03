@@ -39,7 +39,7 @@ impl core::fmt::Write for LogWriter {
         unsafe {
             // Trigger your macro: syscall!(num, arg1, arg2, arg3)
             syscall!(
-                0, 
+                kernel::SYS_DEBUG, 
                 s.as_ptr() as usize, 
                 s.len()
             );
