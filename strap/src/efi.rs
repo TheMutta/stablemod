@@ -30,6 +30,7 @@ use crate::config::StrapConfig;
 use alloc::boxed::Box;
 use hal::memory::*;
 use hal::log::HalLogger;
+use hal::rng::HalRngGenerator;
 use hal::paging::{HalPageHierarchy, HalPageFlags};
 use core::num::NonZero;
 
@@ -45,6 +46,8 @@ use kernel::ResourceCapabilityArena;
 fn efi_main() -> Status { 
     HalLogger::init();
     uefi::helpers::init().unwrap();
+
+    let rng_generator = HalRngGenerator::new();
 
     let uefi_allocator = Box::leak(Box::new(HalUefiFrameAllocator::new()));
     let frame_allocator = HalFrameAllocatorWrapper::new(uefi_allocator);
@@ -165,21 +168,24 @@ fn efi_main() -> Status {
             ptr.write_bytes(0x00, page_count);
 
             // TODO: fill rng data
-            let mut rng_data = [0u8; size_of::<u64>() * 2];
+            let mut rng_data = [0u64; 2];
+            rng_generator.generate_rng(&mut rng_data);
 
-            let arenaid = u64::from_le_bytes(rng_data[0..8].try_into().unwrap());
+            let arenaid = rng_data[0];
             let slots = 0;
             let slots_free = 0;
 
             let permissions = 0;
             let resource = ptr.as_ptr() as u64;
             let size = page_count as u64 * 4096;
-            let genid = u64::from_le_bytes(rng_data[8..16].try_into().unwrap());
+            let genid = rng_data[1];
             let derived_refs = 0;
             let virtual_refs = 0;
             let arena_cap = ResourceCapability::new(permissions, resource, size, genid, derived_refs, virtual_refs);
 
             core::ptr::write(ptr.as_ptr(), ResourceCapabilityArena::new(arenaid, slots, slots_free, arena_cap));
+
+            log::info!("Arena: {:#?}", *ptr.as_ptr());
 
             ptr
         }

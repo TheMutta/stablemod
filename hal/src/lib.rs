@@ -9,3 +9,4 @@ pub mod paging;
 pub mod memory;
 pub mod cpu;
 pub mod log;
+pub mod rng;
