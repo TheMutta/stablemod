@@ -20,10 +20,11 @@ pub struct HalProcessor {
 use aarch64_cpu::registers::Writeable;
 
 #[cfg(target_arch = "aarch64")]
+#[unsafe(naked)]
 #[unsafe(no_mangle)]
 #[unsafe(link_section = ".text.exceptions")]
 pub unsafe extern "C" fn exception_vector_table() {
-    core::arch::asm!(
+    core::arch::naked_asm!(
         ".balign 2048",
         // Current EL with SP0 (Synchronous, IRQ, FIQ, SError)
         ".balign 0x80", "b exception_handler",
@@ -36,7 +37,6 @@ pub unsafe extern "C" fn exception_vector_table() {
         ".balign 0x80", "b exception_handler",
         ".balign 0x80", "b exception_handler",
         ".balign 0x80", "b exception_handler",
-        options(noreturn)
     );
 }
 
@@ -51,6 +51,9 @@ pub extern "C" fn exception_handler() {
 impl HalProcessor {
     pub unsafe fn init_exceptions() {
         use aarch64_cpu::registers::VBAR_EL1;
+
+        core::hint::black_box(exception_vector_table as unsafe extern "C" fn());
+
         // Set the Vector Base Address Register (VBAR_EL1)
         VBAR_EL1.set(exception_vector_table as usize as u64);
         core::arch::asm!("isb");
@@ -180,11 +183,14 @@ impl HalProcessor {
             idt.load_unsafe();
         }
 
+        unsafe extern "C" {
+            fn syscall_vector_table();
+        }
         unsafe { Efer::write(Efer::read().union(EferFlags::SYSTEM_CALL_EXTENSIONS)); }
         Star::write(user_code_segment, user_data_segment, code_segment,data_segment).unwrap();
 
-        core::hint::black_box(syscall_entry as unsafe extern "C" fn());
-        LStar::write(VirtAddr::new(syscall_entry as *const () as u64));
+        core::hint::black_box(syscall_vector_table as unsafe extern "C" fn());
+        LStar::write(VirtAddr::new(syscall_vector_table as *const () as u64));
 
         interrupts::enable();
     }
@@ -309,14 +315,118 @@ extern "x86-interrupt" fn security_exception_handler(_isf: InterruptStackFrame, 
     loop {}
 }
 
-use core::arch::naked_asm;
+#[inline(always)]
+pub unsafe fn do_syscall(sys_num: usize, arg1: usize, arg2: usize, arg3: usize, arg4: usize, arg5: usize, arg6: usize) -> usize {
+    let mut ret: usize = 0;
 
-#[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
-#[unsafe(naked)]
-#[unsafe(no_mangle)]
-#[unsafe(link_section = ".syscall_trampoline")]
-unsafe extern "C" fn syscall_entry() {
-     naked_asm!(
-         "sysretq",
-         );
+    #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os = "uefi")))]
+    unsafe {
+        core::arch::asm!(
+            "mov r10, rcx",
+            "syscall",
+            in("rax") sys_num,
+            in("rdi") arg1,
+            in("rsi") arg2,
+            in("rdx") arg3,
+            in("rcx") arg4,
+            in("r8") arg5,
+            in("r9") arg6,
+            lateout("rax") ret,
+            lateout("rcx") _,
+            lateout("r11") _,
+        );
+    }
+
+    ret
+}
+
+#[macro_export]
+macro_rules! syscall {
+    ($sys_num:expr) => {
+        unsafe { $crate::cpu::do_syscall($sys_num, 0, 0, 0, 0, 0, 0) }
+    };
+
+    ($sys_num:expr, $arg1:expr) => {
+        unsafe { $crate::cpu::do_syscall($sys_num, $arg1, 0, 0, 0, 0, 0) }
+    };
+
+    ($sys_num:expr, $arg1:expr, $arg2:expr) => {
+        unsafe { $crate::cpu::do_syscall($sys_num, $arg1, $arg2, 0, 0, 0, 0) }
+    };
+
+    ($sys_num:expr, $arg1:expr, $arg2:expr, $arg3:expr) => {
+        unsafe { $crate::cpu::do_syscall($sys_num, $arg1, $arg2, $arg3, 0, 0, 0) }
+    };
+
+    ($sys_num:expr, $arg1:expr, $arg2:expr, $arg3:expr, $arg4:expr) => {
+        unsafe { $crate::cpu::do_syscall($sys_num, $arg1, $arg2, $arg3, $arg4, 0, 0) }
+    };
+
+    ($sys_num:expr, $arg1:expr, $arg2:expr, $arg3:expr, $arg4:expr, $arg5:expr) => {
+        unsafe { $crate::cpu::do_syscall($sys_num, $arg1, $arg2, $arg3, $arg4, $arg5, 0) }
+    };
+
+    ($sys_num:expr, $arg1:expr, $arg2:expr, $arg3:expr, $arg4:expr, $arg5:expr, $arg6:expr) => {
+        unsafe { $crate::cpu::do_syscall($sys_num, $arg1, $arg2, $arg3, $arg4, $arg5, $arg6) }
+    };
+}
+
+#[macro_export]
+macro_rules! batch_syscalls {
+    (
+        $( $name:ident => $func:expr ),* $(,)?
+    ) => {
+        $(
+            #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os = "uefi")))]
+            #[unsafe(no_mangle)]
+            #[unsafe(naked)]
+            #[unsafe(link_section = ".text.syscalls")]
+            pub extern "C" fn $name() {
+                core::arch::naked_asm!(
+                    "jmp {}",
+                    sym $func
+                );
+            }
+        )*
+
+        pub const NR_syscalls: usize = {
+            let mut count = 0;
+            $(
+                let _ = stringify!($name);
+                count += 1;
+            )*
+            count
+        };
+
+        #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os = "uefi")))]
+        #[unsafe(no_mangle)]
+        #[unsafe(naked)]
+        #[unsafe(link_section = ".text.syscalls")]
+        pub unsafe extern "C" fn syscall_vector_table() {
+            core::arch::naked_asm!(
+                ".global syscall_table",
+                "dispatch_syscall:",
+                "   cmp rax, {NR_SYS}",
+                "   jae .invalid_syscall",
+                "   lea r11, [rip + syscall_table]",
+                "   movsxd rax, dword ptr [r11 + 4 * rax]",
+                "   add rax, r11",
+                "   mov rcx, r10", // 4th arg
+                "   jmp rax",
+                ".invalid_syscall:",
+                "   mov rax, -1",
+                "   sysretq",
+                ".align 4",
+                "syscall_table:",
+                $(
+                    concat!("   .long {", stringify!($name), "} - syscall_table")
+                ),*
+                ,
+                NR_SYS = const NR_syscalls,
+                $(
+                    $name = sym $name
+                ),*
+            );
+        }
+    };
 }

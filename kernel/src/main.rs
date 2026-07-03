@@ -21,8 +21,20 @@ pub fn panic_handler(info: &PanicInfo) -> ! {
 }
 
 use hal::cpu::HalProcessor;
+use hal::batch_syscalls;
 static mut BOOT_PROCESSOR: HalProcessor = HalProcessor::new();
 static mut FRAME_ALLOCATOR: HalBareFrameAllocator = HalBareFrameAllocator::new();
+
+extern "C" fn sys_debug( count: usize) -> usize {
+    log::info!("write!");
+
+    loop {}
+    0
+}
+
+batch_syscalls!(
+    sys_0_handler => sys_debug,
+);
 
 #[unsafe(no_mangle)]
 extern "C" fn _start(bootloader_data: *const crate::c_abi::boot_loader_data) -> ! { 

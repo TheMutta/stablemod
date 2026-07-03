@@ -8,3 +8,4 @@ bindgen = "0.72.1"
 
 [dependencies]
 log = "0.4.33"
+hal = { version = "0.1.0", path = "../hal" }

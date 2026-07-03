@@ -30,8 +30,13 @@ unsafe impl GlobalAlloc for BaseAlloc {
 #[global_allocator]
 static mut GLOBAL_ALLOC: BaseAlloc = BaseAlloc;
 
+use hal::syscall;
+
 #[unsafe(no_mangle)]
 fn _start() {
+    syscall!(0, 1);
+
+
     loop {}
 }
 

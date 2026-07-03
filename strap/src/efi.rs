@@ -164,6 +164,14 @@ fn efi_main() -> Status {
         }
     };
 
+
+    use uefi::mem::memory_map::MemoryMap;
+    use uefi::mem::memory_map::MemoryMapMut;
+    let mut memory_map = uefi::boot::memory_map(uefi::boot::MemoryType::LOADER_DATA).unwrap();
+    memory_map.sort();
+    for entry in memory_map.entries() {
+    }
+
     unsafe { bootloader_info.as_mut().signature = crate::c_abi::BOOTLOADER_SIGNATURE; }
 
     log::info!("bootloader data initialized: {}", unsafe {
