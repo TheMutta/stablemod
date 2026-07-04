@@ -1,4 +1,5 @@
 /testing
+/serial.log
 /tmp
 **/target
 *.x86_64
