@@ -30,8 +30,10 @@ const uint64_t CAPABILITY_DERIVE = 1 << 4;
 /// This resource right can be revoked
 const uint64_t CAPABILITY_REVOKE = 1 << 5;
 
+/// Resource can be memory mapped
+const uint64_t CAPABILITY_MAP = 1 << 6;
+
 struct capability_handle {
-	//uint64_t resource_ptr;
 	uint64_t generation_id;
 	uint64_t arena_id;
 };

@@ -31,6 +31,7 @@ use hal::syscall;
 use hal::log::HalLogger;
 
 use kernel::CapabilityHandle;
+use kernel::ResourceCapability;
 use kernel::ResourceCapabilityArena;
 
 #[unsafe(no_mangle)]
@@ -63,9 +64,30 @@ extern "C" fn _start(arg0: u64, arg1: u64) {
         if arena.arenaid == arg1 {
             log::info!("read arena id and real arena id match!");
             log::info!("arena size: {}", arena.arena_cap.size);
+            log::info!("arena: {:#?}", arena);
+
+            let rescap = ResourceCapability::default();
+
+            for idx in 0..(arena.slots - arena.slots_free) {
+                let res = syscall!(
+                    kernel::SYS_CAP_READ,
+                    &arena_handle as *const CapabilityHandle as usize,
+                    &cap_handle as *const CapabilityHandle as usize,
+                    idx as usize * 64 + core::mem::offset_of!(ResourceCapabilityArena, res_cap) as usize,
+                    &rescap as *const _ as *const u8 as *mut u8 as usize,
+                    64
+                );
+
+                if res != 0 { log::info!("PANIC"); loop {} }
+
+                log::info!("cap: {:#?}", rescap);
+            }
+
         }
     }
+                
 
+    log::info!("Done!");
 
     loop {}
 }
