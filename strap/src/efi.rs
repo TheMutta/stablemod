@@ -24,7 +24,7 @@ fn efi_load_file(path: CString16) -> uefi::fs::FileSystemResult<Vec<u8>> {
     image_file_system.read(path.as_ref())
 }
 
-
+use crate::elf::ElfFileKind;
 use core::ptr::NonNull;
 use crate::config::StrapConfig;
 use alloc::boxed::Box;
@@ -63,7 +63,7 @@ fn efi_main() -> Status {
         let page_count = size_of::<crate::c_abi::boot_loader_data>() / uefi::boot::PAGE_SIZE;
         let page = uefi::boot::allocate_pages(uefi::boot::AllocateType::AnyPages, uefi::boot::MemoryType::LOADER_DATA, page_count).expect("could not allocate bootloader data");
     
-        page_hierarchy.mapping(page.as_ptr() as u64, page.as_ptr() as u64, HalPageFlags::R, page_count * 4096);
+        page_hierarchy.mapping(page.as_ptr() as u64, page.as_ptr() as u64, HalPageFlags::KR, page_count * 4096);
 
         unsafe {
             let ptr = NonNull::new_unchecked(page.as_ptr() as *mut crate::c_abi::boot_loader_data);
@@ -103,8 +103,8 @@ fn efi_main() -> Status {
             cstr16!("butler.unknown").into()
         }
     ).expect("could not load objman");
-    let kernel = crate::elf::elf_parse_file(&mut page_hierarchy, &frame_allocator, kernel).expect("could not parse kernel");
-    let objman = crate::elf::elf_parse_file(&mut page_hierarchy, &frame_allocator, objman).expect("could not parse objman");
+    let kernel = crate::elf::elf_parse_file(&mut page_hierarchy, &frame_allocator, kernel, ElfFileKind::Kernel).expect("could not parse kernel");
+    let objman = crate::elf::elf_parse_file(&mut page_hierarchy, &frame_allocator, objman, ElfFileKind::User).expect("could not parse objman");
 
     unsafe {
         core::ptr::write(&mut bootloader_info.as_mut().kernel_executable, kernel);
@@ -192,7 +192,7 @@ fn efi_main() -> Status {
 
             core::ptr::write(ptr.as_ptr(), ResourceCapabilityArena::new(arenaid, slots, slots_free, arena_cap));
 
-            page_hierarchy.mapping(page.as_ptr() as u64, page.as_ptr() as u64, HalPageFlags::RW, page_count * 4096);
+            page_hierarchy.mapping(page.as_ptr() as u64, page.as_ptr() as u64, HalPageFlags::KRW, page_count * 4096);
 
             log::info!("Arena: {:#?}", *ptr.as_ptr());
 

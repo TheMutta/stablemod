@@ -12,7 +12,12 @@ use core::ptr::NonNull;
 
 use hal::paging::*;
 
-pub fn elf_parse_file(page_hierarchy: &mut HalPageHierarchy, frame_allocator: &HalFrameAllocatorWrapper, file: Vec<u8>) -> Option<crate::c_abi::boot_executable_info> {
+pub enum ElfFileKind {
+    Kernel,
+    User,
+}
+
+pub fn elf_parse_file(page_hierarchy: &mut HalPageHierarchy, frame_allocator: &HalFrameAllocatorWrapper, file: Vec<u8>, file_kind: ElfFileKind) -> Option<crate::c_abi::boot_executable_info> {
     log::info!("Parsing elf file");
 
     let slice = file.as_slice();
@@ -61,17 +66,34 @@ pub fn elf_parse_file(page_hierarchy: &mut HalPageHierarchy, frame_allocator: &H
                 unsafe { core::ptr::write_bytes(pages.as_ptr(), 0, total_bytes); }
 
                 phdrs.iter().for_each(|phdr| {
-                    if phdr.p_flags == PF_NONE {
-                        page_hierarchy.mapping(pages_u64 + phdr.p_vaddr, pages_u64 + phdr.p_vaddr, HalPageFlags::N, phdr.p_memsz as usize);
-                    } else if phdr.p_flags == PF_R {
-                        page_hierarchy.mapping(pages_u64 + phdr.p_vaddr, pages_u64 + phdr.p_vaddr, HalPageFlags::R, phdr.p_memsz as usize);
-                    } else if phdr.p_flags == PF_R | PF_W {
-                        page_hierarchy.mapping(pages_u64 + phdr.p_vaddr, pages_u64 + phdr.p_vaddr, HalPageFlags::RW, phdr.p_memsz as usize);
-                    } else if phdr.p_flags == PF_R | PF_X {
-                        page_hierarchy.mapping(pages_u64 + phdr.p_vaddr, pages_u64 + phdr.p_vaddr, HalPageFlags::RE, phdr.p_memsz as usize);
-                    } else {
-                        panic!("invalid combination {}", phdr.p_flags);
-                    }
+                    match file_kind {
+                        ElfFileKind::Kernel => {
+                            if phdr.p_flags == PF_NONE {
+                                page_hierarchy.mapping(pages_u64 + phdr.p_vaddr, pages_u64 + phdr.p_vaddr, HalPageFlags::KN, phdr.p_memsz as usize);
+                            } else if phdr.p_flags == PF_R {
+                                page_hierarchy.mapping(pages_u64 + phdr.p_vaddr, pages_u64 + phdr.p_vaddr, HalPageFlags::KR, phdr.p_memsz as usize);
+                            } else if phdr.p_flags == PF_R | PF_W {
+                                page_hierarchy.mapping(pages_u64 + phdr.p_vaddr, pages_u64 + phdr.p_vaddr, HalPageFlags::KRW, phdr.p_memsz as usize);
+                            } else if phdr.p_flags == PF_R | PF_X {
+                                page_hierarchy.mapping(pages_u64 + phdr.p_vaddr, pages_u64 + phdr.p_vaddr, HalPageFlags::KRE, phdr.p_memsz as usize);
+                            } else {
+                                panic!("invalid combination {}", phdr.p_flags);
+                            }
+                        },
+                        ElfFileKind::User => {
+                            if phdr.p_flags == PF_NONE {
+                                page_hierarchy.mapping(pages_u64 + phdr.p_vaddr, pages_u64 + phdr.p_vaddr, HalPageFlags::N, phdr.p_memsz as usize);
+                            } else if phdr.p_flags == PF_R {
+                                page_hierarchy.mapping(pages_u64 + phdr.p_vaddr, pages_u64 + phdr.p_vaddr, HalPageFlags::R, phdr.p_memsz as usize);
+                            } else if phdr.p_flags == PF_R | PF_W {
+                                page_hierarchy.mapping(pages_u64 + phdr.p_vaddr, pages_u64 + phdr.p_vaddr, HalPageFlags::RW, phdr.p_memsz as usize);
+                            } else if phdr.p_flags == PF_R | PF_X {
+                                page_hierarchy.mapping(pages_u64 + phdr.p_vaddr, pages_u64 + phdr.p_vaddr, HalPageFlags::RE, phdr.p_memsz as usize);
+                            } else {
+                                panic!("invalid combination {}", phdr.p_flags);
+                            }
+                        },
+                    };
 
                     unsafe {
                         core::ptr::copy_nonoverlapping(&slice[phdr.p_offset as usize], pages.add(phdr.p_vaddr as usize).as_ptr(), phdr.p_filesz as usize);
@@ -100,12 +122,30 @@ pub fn elf_parse_file(page_hierarchy: &mut HalPageHierarchy, frame_allocator: &H
                     }
                 }
                 
-                let stack_bottom = frame_allocator.alloc_frames(NonZero::new(16*4).unwrap()).expect("failed to alloc stack").into();
-                page_hierarchy.mapping(stack_bottom, stack_bottom, HalPageFlags::RW, 16* 4 * 4096);
-                let stack_top = stack_bottom + 16 * 4 * 4096;
-                let kernel_stack_top = stack_top;
-                let interrupt_stack_top = kernel_stack_top - 16 * 4096;
-                let user_stack_top = interrupt_stack_top - 16 * 4096;
+                const SINGLE_STACK_SIZE: u64 = 16 * 4096;
+                let stack_bottom = frame_allocator.alloc_frames(NonZero::new(SINGLE_STACK_SIZE as usize / 4096 * 3 + 4).unwrap()).expect("failed to alloc stack").into();
+                let stack_top = stack_bottom + SINGLE_STACK_SIZE * 3 + 4 * 4096;
+                let kernel_stack_top = stack_top - 4096;
+                page_hierarchy.mapping(kernel_stack_top, kernel_stack_top, HalPageFlags::KN, 4096); // guard
+                let kernel_stack_bottom = kernel_stack_top - SINGLE_STACK_SIZE;
+                page_hierarchy.mapping(kernel_stack_bottom, kernel_stack_bottom, HalPageFlags::KRW, SINGLE_STACK_SIZE as usize); // kern stack
+                let interrupt_stack_top = kernel_stack_bottom - 4096;
+                page_hierarchy.mapping(interrupt_stack_top, interrupt_stack_top, HalPageFlags::KN, 4096); // guard
+                let interrupt_stack_bottom = interrupt_stack_top - SINGLE_STACK_SIZE;
+                page_hierarchy.mapping(interrupt_stack_bottom, interrupt_stack_bottom, HalPageFlags::KRW, SINGLE_STACK_SIZE as usize); // interr stack
+                let user_stack_top = interrupt_stack_bottom - 4096;
+                page_hierarchy.mapping(user_stack_top, user_stack_top, HalPageFlags::KN, 4096); // guard
+                let user_stack_bottom = user_stack_top - SINGLE_STACK_SIZE;
+                match file_kind {
+                    ElfFileKind::Kernel => {
+                        page_hierarchy.mapping(user_stack_bottom, user_stack_bottom, HalPageFlags::KRW, SINGLE_STACK_SIZE as usize); // kernel starting stack
+                    },
+                    ElfFileKind::User => {
+                        page_hierarchy.mapping(user_stack_bottom, user_stack_bottom, HalPageFlags::RW, SINGLE_STACK_SIZE as usize); // user stack
+                    },
+                };
+                page_hierarchy.mapping(stack_bottom, stack_bottom, HalPageFlags::KN, 4096); // guard
+
 
                 let entry = pages.as_ptr() as u64 + ehdr.e_entry;
                 let info: crate::c_abi::boot_executable_info = crate::c_abi::boot_executable_info {

@@ -10,6 +10,14 @@ use x86_64::{
 };
 
 pub enum HalPageFlags {
+    // Kernel flags
+    KN,
+    KR,
+    KRE,
+    KRW,
+    KRWE,
+
+    // User flags
     N,
     R,
     RE,
@@ -86,12 +94,17 @@ impl HalPageHierarchy {
             use x86_64::structures::paging::PageTableFlags as Flags;
 
             let flags = match flags {
-                HalPageFlags::N => Flags::NO_EXECUTE,
-                HalPageFlags::R => Flags::PRESENT | Flags::NO_EXECUTE,
-                HalPageFlags::RE => Flags::PRESENT,
-                HalPageFlags::RW => Flags::PRESENT | Flags::WRITABLE | Flags::NO_EXECUTE,
-                HalPageFlags::RWE => Flags::PRESENT | Flags::WRITABLE,
-            } | Flags::USER_ACCESSIBLE;
+                HalPageFlags::KN => Flags::NO_EXECUTE,
+                HalPageFlags::KR => Flags::PRESENT | Flags::NO_EXECUTE,
+                HalPageFlags::KRE => Flags::PRESENT,
+                HalPageFlags::KRW => Flags::PRESENT | Flags::WRITABLE | Flags::NO_EXECUTE,
+                HalPageFlags::KRWE => Flags::PRESENT | Flags::WRITABLE,
+                HalPageFlags::N => Flags::NO_EXECUTE | Flags::USER_ACCESSIBLE,
+                HalPageFlags::R => Flags::PRESENT | Flags::NO_EXECUTE | Flags::USER_ACCESSIBLE,
+                HalPageFlags::RE => Flags::PRESENT | Flags::USER_ACCESSIBLE,
+                HalPageFlags::RW => Flags::PRESENT | Flags::WRITABLE | Flags::NO_EXECUTE | Flags::USER_ACCESSIBLE,
+                HalPageFlags::RWE => Flags::PRESENT | Flags::WRITABLE | Flags::USER_ACCESSIBLE,
+            };
 
             for off in (0..length).step_by(4096) {
                 let frame = PhysFrame::<Size4KiB>::containing_address(PhysAddr::new(phys_addr + off as u64));
@@ -113,6 +126,11 @@ impl HalPageHierarchy {
             const MAP_ANONYMOUS: i32 = 0x20;
             const MAP_FIXED: i32 = 0x10;
             let prot = match flags {
+                HalPageFlags::KN => todo!(),
+                HalPageFlags::KR => todo!(),
+                HalPageFlags::KRE => todo!(),
+                HalPageFlags::KRW => todo!(),
+                HalPageFlags::KRWE => todo!(),
                 HalPageFlags::N => PROT_NONE,
                 HalPageFlags::R => PROT_READ,
                 HalPageFlags::RE => PROT_READ | PROT_EXEC,

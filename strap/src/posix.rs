@@ -1,6 +1,8 @@
 use hal::memory::*;
 use alloc::boxed::Box;
 
+use crate::elf::ElfFileKind;
+
 use hal::log::HalLogger;
 use crate::elf::elf_parse_file;
 use std::num::NonZero;
@@ -47,8 +49,8 @@ pub fn main() {
 
     let kernel = std::fs::read("kernel.x86_64").expect("could not load kernel");
     let objman = std::fs::read("butler.x86_64").expect("could not load objman");
-    let kernel = elf_parse_file(&mut page_hierarchy, &frame_allocator, kernel).expect("could not parse kernel");
-    let objman = elf_parse_file(&mut page_hierarchy, &frame_allocator, objman).expect("could not parse objman");
+    let kernel = elf_parse_file(&mut page_hierarchy, &frame_allocator, kernel, ElfFileKind::Kernel).expect("could not parse kernel");
+    let objman = elf_parse_file(&mut page_hierarchy, &frame_allocator, objman, ElfFileKind::User).expect("could not parse objman");
     bootloader_info.kernel_executable = kernel;
     bootloader_info.objman_executable = objman;
 
