@@ -56,6 +56,7 @@ macro_rules! print {
 }
 
 use kernel::CapabilityHandle;
+use kernel::ResourceCapabilityArena;
 
 #[unsafe(no_mangle)]
 extern "C" fn _start(arg0: u64, arg1: u64) {
@@ -65,7 +66,7 @@ extern "C" fn _start(arg0: u64, arg1: u64) {
     let arena_handle = CapabilityHandle::new(arg0, arg1);
     let cap_handle = CapabilityHandle::new(arg0, arg1);
 
-    let buf = [0u8; 128];
+    let buf = [0u8; 4096];
 
     print!("Read!");
     let res = syscall!(
@@ -79,6 +80,12 @@ extern "C" fn _start(arg0: u64, arg1: u64) {
 
     if res == 0 {
         print!("Valid read!");
+
+        let arena = unsafe { core::mem::transmute::<[u8; 4096], ResourceCapabilityArena>(buf) };
+
+        if arena.arenaid == arg1 {
+            print!("read arena id and real arena id match!");
+        }
     }
 
 
