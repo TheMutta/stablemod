@@ -280,7 +280,6 @@ extern "C" fn _start(bootloader_data: *const crate::c_abi::boot_loader_data) -> 
         panic!("Invalid bootloader data!");
     }
 
-
     log::info!("bootloader data: {:#?}", bootloader_data);
 
 

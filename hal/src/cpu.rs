@@ -321,7 +321,7 @@ pub unsafe fn do_userland_jump(userland_ip: u64, userland_sp: u64, arg0: u64, ar
     unsafe {
         core::arch::asm!(
             //"mov rsp, rax",
-	    "mov r11, 0x202",
+	    "mov r11, 0x3202",
             "sysretq",
             in("rdi") arg0,
             in("rsi") arg1,
