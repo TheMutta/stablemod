@@ -37,6 +37,8 @@ batch_syscalls!(
     sys_0_handler => sys_debug,
 );
 
+use kernel::ResourceCapabilityArena;
+
 #[unsafe(no_mangle)]
 extern "C" fn _start(bootloader_data: *const crate::c_abi::boot_loader_data) -> ! { 
     HalLogger::init();
@@ -49,7 +51,11 @@ extern "C" fn _start(bootloader_data: *const crate::c_abi::boot_loader_data) -> 
         panic!("Invalid bootloader data!");
     }
 
+
     log::info!("bootloader data: {:#?}", bootloader_data);
+
+    let root_arena = bootloader_data.kernel_executable.arenas.root_resource_capability_arena as *const ResourceCapabilityArena;
+    log::info!("Slots: {:#?}", unsafe { (*root_arena).get_slots() });
 
     let frame_allocator = unsafe {
         //FRAME_ALLOCATOR.init();

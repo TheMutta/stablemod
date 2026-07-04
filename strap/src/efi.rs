@@ -154,10 +154,17 @@ fn efi_main() -> Status {
     });
 
 
-
+    use uefi::mem::memory_map::MemoryMap;
+    use uefi::mem::memory_map::MemoryMapMut;
+    let mut memory_map = uefi::boot::memory_map(uefi::boot::MemoryType::LOADER_DATA).unwrap();
+    memory_map.sort();
 
     let mut root_capability_arena: NonNull<ResourceCapabilityArena> = {
-        let page_count = 4; // TODO
+
+        let arena_size = memory_map.entries().count() * size_of::<ResourceCapability>() * 2 + size_of::<ResourceCapabilityArena>();
+        let arena_size = arena_size + (4096 - arena_size % 4096);
+
+        let page_count = arena_size / 4096;
         let page = uefi::boot::allocate_pages(uefi::boot::AllocateType::AnyPages, uefi::boot::MemoryType::LOADER_DATA, page_count).expect("could not allocate root arena");
 
         let addr = page.as_ptr() as *mut ResourceCapabilityArena;
@@ -167,15 +174,15 @@ fn efi_main() -> Status {
             let ptr = NonNull::new_unchecked(addr);
             ptr.write_bytes(0x00, page_count);
 
-            // TODO: fill rng data
             let mut rng_data = [0u64; 2];
             rng_generator.generate_rng(&mut rng_data);
 
             let arenaid = rng_data[0];
-            let slots = 0;
-            let slots_free = 0;
+            let slots = (arena_size - size_of::<ResourceCapabilityArena>()) / size_of::<ResourceCapability>();
+            let slots = slots as u32;
+            let slots_free = slots;
 
-            let permissions = 0;
+            let permissions = crate::c_abi::CAPABILITY_READ | crate::c_abi::CAPABILITY_WRITE;
             let resource = ptr.as_ptr() as u64;
             let size = page_count as u64 * 4096;
             let genid = rng_data[1];
@@ -192,12 +199,7 @@ fn efi_main() -> Status {
     };
 
 
-    use uefi::mem::memory_map::MemoryMap;
-    use uefi::mem::memory_map::MemoryMapMut;
-    let mut memory_map = uefi::boot::memory_map(uefi::boot::MemoryType::LOADER_DATA).unwrap();
-    memory_map.sort();
-    for entry in memory_map.entries() {
-    }
+
 
     unsafe { bootloader_info.as_mut().signature = crate::c_abi::BOOTLOADER_SIGNATURE; }
 
@@ -217,7 +219,24 @@ fn efi_main() -> Status {
         let aligned_stack = stack_top & !0xF;
         let absolute_entry = kernel.entry;
         log::info!("jumping to {:X}:{:X}", absolute_entry, aligned_stack);
-        let _ = uefi::boot::exit_boot_services(None);
+        let memory_map = uefi::boot::exit_boot_services(None);
+
+        let slots = (*root_capability_arena.as_ptr()).get_slots_ptr();
+
+        for (idx, entry) in memory_map.entries().enumerate() {
+            let mut rng_data = [0u64; 1];
+            rng_generator.generate_rng(&mut rng_data);
+            let permissions = crate::c_abi::CAPABILITY_READ | crate::c_abi::CAPABILITY_WRITE;
+            let resource = entry.phys_start;
+            let size = entry.page_count * 4096;
+            let genid = rng_data[0];
+            let derived_refs = 0;
+            let virtual_refs = 0;
+
+            (*root_capability_arena.as_ptr()).slots_free -= 1;
+            core::ptr::write(slots.add(idx), ResourceCapability::new(permissions, resource, size, genid, derived_refs, virtual_refs));
+        }
+
         core::arch::asm!(
             "mov rdi, {bootloader_info}",
             "mov rsp, {stack_ptr}",

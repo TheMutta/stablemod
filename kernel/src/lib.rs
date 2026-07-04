@@ -59,6 +59,20 @@ impl ResourceCapabilityArena {
             ..Default::default()
         }
     }
+
+    pub fn get_slots(&self) -> &[ResourceCapability] {
+        unsafe {
+            let ptr = &self.res_cap  as *const _ as *const ResourceCapability;
+            let slice: &[ResourceCapability] = core::slice::from_raw_parts(ptr, self.slots as usize);
+
+            slice
+        }
+    }
+
+    pub fn get_slots_ptr(&mut self) -> *mut ResourceCapability {
+        let ptr = &self.res_cap  as *const _ as *const ResourceCapability as *mut _;
+        ptr
+    }
 }
 
 impl VirtualCapabilityArena {
@@ -69,6 +83,15 @@ impl VirtualCapabilityArena {
             slots_free,
             arena_cap,
             ..Default::default()
+        }
+    }
+
+    pub fn get_slots(&self) -> &[VirtualCapability] {
+        unsafe {
+            let ptr = &self.virt_cap  as *const _ as *const VirtualCapability;
+            let slice: &[VirtualCapability] = core::slice::from_raw_parts(ptr, self.slots as usize);
+
+            slice
         }
     }
 }

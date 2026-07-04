@@ -31,6 +31,7 @@ const uint64_t CAPABILITY_DERIVE = 1 << 4;
 const uint64_t CAPABILITY_REVOKE = 1 << 5;
 
 struct capability_handle {
+	//uint64_t resource_ptr;
 	uint64_t generation_id;
 	uint64_t arena_id;
 }__attribute__((packed));
