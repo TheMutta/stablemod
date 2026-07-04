@@ -99,6 +99,13 @@ pub fn elf_parse_file(page_hierarchy: &mut HalPageHierarchy, frame_allocator: &H
                         }
                     }
                 }
+                
+                let stack_bottom = frame_allocator.alloc_frames(NonZero::new(16*4).unwrap()).expect("failed to alloc stack").into();
+                page_hierarchy.mapping(stack_bottom, stack_bottom, HalPageFlags::RW, 16* 4 * 4096);
+                let stack_top = stack_bottom + 16 * 4 * 4096;
+                let kernel_stack_top = stack_top;
+                let interrupt_stack_top = kernel_stack_top - 16 * 4096;
+                let user_stack_top = interrupt_stack_top - 16 * 4096;
 
                 let entry = pages.as_ptr() as u64 + ehdr.e_entry;
                 let info: crate::c_abi::boot_executable_info = crate::c_abi::boot_executable_info {
@@ -106,6 +113,9 @@ pub fn elf_parse_file(page_hierarchy: &mut HalPageHierarchy, frame_allocator: &H
                     virtual_base: pages.as_ptr() as u64,
                     entry: entry as u64,
                     virtual_space: page_hierarchy.get_root(),
+                    kernel_stack_top,
+                    interrupt_stack_top,
+                    user_stack_top,
                     pages: crate::c_abi::boot_executable_info_page_counts {
                         text_pages: 0,
                         rodata_pages: 0,

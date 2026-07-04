@@ -298,7 +298,10 @@ extern "C" fn _start(bootloader_data: *const crate::c_abi::boot_loader_data) -> 
     };
 
     unsafe {
-        BOOT_PROCESSOR.init();
+        BOOT_PROCESSOR.init(
+            bootloader_data.kernel_executable.kernel_stack_top,
+            bootloader_data.kernel_executable.interrupt_stack_top,
+            );
     }
     
     log::info!("cpu initialised");
@@ -307,7 +310,6 @@ extern "C" fn _start(bootloader_data: *const crate::c_abi::boot_loader_data) -> 
     page_hierarchy.switch();
 
     log::info!("kernel execution finished, handing off!");
-
 
     unsafe {
         do_userland_jump(bootloader_data.objman_executable.entry, 0, root_resource_capability_arena_handle.generation_id, root_resource_capability_arena_handle.arena_id);

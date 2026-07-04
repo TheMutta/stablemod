@@ -47,8 +47,10 @@ case $ARCH in
 			-drive if=pflash,format=raw,file=./testing/bios/efi/x64/vars.fd \
 			-drive format=raw,file=fat:rw:testing/esp \
 			-device virtio-gpu-pci \
+			-chardev stdio,id=char0,mux=on,logfile=serial.log,signal=off \
 			-display none \
-			-serial stdio			
+			-serial chardev:char0 \
+			-mon chardev=char0
 		;;
 	"aarch64-unknown-uefi")
 		qemu-system-aarch64 \

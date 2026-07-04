@@ -1,0 +1,3023 @@
+[2J[01;01H[=3h[2J[01;01H[2J[01;01H[8;042;160t0[2J[01;01H[2J[01;01H[8;056;240t0[2J[01;01HBdsDxe: loading Boot0002 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+BdsDxe: starting Boot0002 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+[INFO strap::efi] - config: StrapConfig {
+    version: "0.1",
+    boot_entry: Some(
+        [
+            StrapBootEntry {
+                default: Some(
+                    true,
+                ),
+                kernel: "kernel.x86_64",
+                objman: "objman.x86_64",
+            },
+        ],
+    ),
+}
+
+[INFO strap::elf] - Parsing elf file
+
+[INFO strap::elf] - File range [0x0-0x2E000]
+
+[INFO strap::elf] - Mem range from 0xDCE0000
+
+[INFO strap::elf] - Executable info: boot_executable_info {
+    physical_base: 0xDCE0000,
+    virtual_base: 0xDCE0000,
+    entry: 0xDCECE50,
+    virtual_space: 0xDD16000,
+    kernel_stack_top: 0xDCE0000,
+    user_stack_top: 0xDCC0000,
+    interrupt_stack_top: 0xDCD0000,
+    pages: boot_executable_info_page_counts {
+        text_pages: 0x0,
+        rodata_pages: 0x0,
+        data_pages: 0x0,
+        null_pages: 0x0,
+    },
+    crc32: 0x0,
+    arenas: boot_executable_info_capability_arenas {
+        root_resource_capability_arena: 0x0,
+        root_virtual_capability_arena: 0x0,
+    },
+}
+
+[INFO strap::elf] - Parsing elf file
+
+[INFO strap::elf] - File range [0x0-0x21000]
+
+[INFO strap::elf] - Mem range from 0xDC7F000
+
+[INFO strap::elf] - Executable info: boot_executable_info {
+    physical_base: 0xDC7F000,
+    virtual_base: 0xDC7F000,
+    entry: 0xDC86540,
+    virtual_space: 0xDD16000,
+    kernel_stack_top: 0xDB80000,
+    user_stack_top: 0xDB60000,
+    interrupt_stack_top: 0xDB70000,
+    pages: boot_executable_info_page_counts {
+        text_pages: 0x0,
+        rodata_pages: 0x0,
+        data_pages: 0x0,
+        null_pages: 0x0,
+    },
+    crc32: 0x0,
+    arenas: boot_executable_info_capability_arenas {
+        root_resource_capability_arena: 0x0,
+        root_virtual_capability_arena: 0x0,
+    },
+}
+
+Found ee4e5898-3914-4259-9d6e-dc7bd79403cf
+Found 05ad34ba-6f02-4214-952e-4da0398e2bb9
+Found 7739f24c-93d7-11d4-9a3a-0090273fc14d
+Found 4c19049f-4137-4dd3-9c10-8b97a83ffdfa
+Found 49152e77-1ada-4764-b7a2-7afefed95e8b
+Found 060cc026-4c0d-4dda-8f41-595fef00a502
+Found eb9d2d31-2d88-11d3-9a16-0090273fc14d
+Found ACPI1 at 0xfb7e000
+RSD PTR 
+Found ACPI2 at 0xfb7e014
+RSD PTR 
+Found dcfa911d-26eb-469f-a220-38b7dc461220
+[INFO strap::efi] - Arena: resource_capability_arena {
+    left: 0x0000000000000000,
+    right: 0x0000000000000000,
+    level: 0,
+    arenaid: 13880495065207157253,
+    slots: 320,
+    slots_free: 320,
+    __bindgen_padding_0: [
+        0,
+        0,
+        0,
+    ],
+    arena_cap: resource_capability {
+        permissions: 1,
+        resource: 231174144,
+        size: 24576,
+        genid: 12070414644978692733,
+        derived_refs: 0,
+        virtual_refs: 0,
+    },
+    res_cap: __IncompleteArrayField,
+}
+
+[INFO strap::efi] - bootloader data initialized: Strapped
+
+[INFO strap::efi] - stack top DCC0000
+
+[INFO strap::efi] - jumping to DCECE50:DCC0000
+
+[INFO kernel] - hello, world!
+[INFO kernel] - this is the kernel speaking!
+[INFO kernel] - bootloader data: boot_loader_data {
+    signature: 7234312004414108755,
+    bootloader_ver: 0,
+    padding: [
+        0,
+        0,
+        0,
+    ],
+    kernel_executable: boot_executable_info {
+        physical_base: 231604224,
+        virtual_base: 231604224,
+        entry: 231657040,
+        virtual_space: 231825408,
+        kernel_stack_top: 231604224,
+        user_stack_top: 231473152,
+        interrupt_stack_top: 231538688,
+        pages: boot_executable_info_page_counts {
+            text_pages: 0,
+            rodata_pages: 0,
+            data_pages: 0,
+            null_pages: 0,
+        },
+        crc32: 0,
+        arenas: boot_executable_info_capability_arenas {
+            root_resource_capability_arena: 231174144,
+            root_virtual_capability_arena: 0,
+        },
+    },
+    objman_executable: boot_executable_info {
+        physical_base: 231206912,
+        virtual_base: 231206912,
+        entry: 231236928,
+        virtual_space: 231825408,
+        kernel_stack_top: 230162432,
+        user_stack_top: 230031360,
+        interrupt_stack_top: 230096896,
+        pages: boot_executable_info_page_counts {
+            text_pages: 0,
+            rodata_pages: 0,
+            data_pages: 0,
+            null_pages: 0,
+        },
+        crc32: 0,
+        arenas: boot_executable_info_capability_arenas {
+            root_resource_capability_arena: 0,
+            root_virtual_capability_arena: 0,
+        },
+    },
+}
+[INFO kernel] - cpu initialised
+[INFO kernel] - kernel execution finished, handing off!
+[INFO butler] - Hello, world!
+[INFO butler] - Butler is alive!
+[INFO butler] - Read!
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - Valid read!
+[INFO butler] - read arena id and real arena id match!
+[INFO butler] - arena size: 24576
+[INFO butler] - arena: resource_capability_arena {
+    left: 0x0000000000000000,
+    right: 0x0000000000000000,
+    level: 0,
+    arenaid: 13880495065207157253,
+    slots: 320,
+    slots_free: 186,
+    __bindgen_padding_0: [
+        0,
+        0,
+        0,
+    ],
+    arena_cap: resource_capability {
+        permissions: 1,
+        resource: 231174144,
+        size: 24576,
+        genid: 12070414644978692733,
+        derived_refs: 0,
+        virtual_refs: 0,
+    },
+    res_cap: __IncompleteArrayField,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 3,
+    resource: 0,
+    size: 552960,
+    genid: 18110068620564142972,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 552960,
+    size: 4096,
+    genid: 18445312254831465007,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 3,
+    resource: 557056,
+    size: 98304,
+    genid: 16942999366102691622,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 3,
+    resource: 1048576,
+    size: 7340032,
+    genid: 11608384376007023883,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 8388608,
+    size: 32768,
+    genid: 15889654898185850542,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 3,
+    resource: 8421376,
+    size: 12288,
+    genid: 11052771859896977253,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 8433664,
+    size: 4096,
+    genid: 13871643263500346568,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 3,
+    resource: 8437760,
+    size: 20480,
+    genid: 16026419979223564054,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 8458240,
+    size: 978944,
+    genid: 7710745156592173798,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 9437184,
+    size: 15204352,
+    genid: 2142236736055634317,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 3,
+    resource: 24641536,
+    size: 175751168,
+    genid: 6532727168090917514,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 200392704,
+    size: 131072,
+    genid: 15154504348107221597,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 3,
+    resource: 200523776,
+    size: 29376512,
+    genid: 11406801467318199485,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 229900288,
+    size: 262144,
+    genid: 4630546473579505830,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 230162432,
+    size: 839680,
+    genid: 17281914567279646227,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 3,
+    resource: 231002112,
+    size: 163840,
+    genid: 1474075372220933538,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 231165952,
+    size: 626688,
+    genid: 7512201277381162675,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 231792640,
+    size: 4096,
+    genid: 16469186124092451980,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 231796736,
+    size: 4096,
+    genid: 14774938178819866889,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 231800832,
+    size: 4096,
+    genid: 822594783786529298,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 3,
+    resource: 231804928,
+    size: 4096,
+    genid: 13434281945475906237,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 231809024,
+    size: 20480,
+    genid: 1112744058975944820,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 231829504,
+    size: 10887168,
+    genid: 9362727687054221133,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 242716672,
+    size: 688128,
+    genid: 12340445564790168761,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 243404800,
+    size: 1228800,
+    genid: 9868454525861642339,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 244633600,
+    size: 1318912,
+    genid: 8986049169177167955,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 245952512,
+    size: 684032,
+    genid: 657668865221315393,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 246636544,
+    size: 49152,
+    genid: 2120609632778781856,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 246685696,
+    size: 49152,
+    genid: 8835223692844219270,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 246734848,
+    size: 73728,
+    genid: 14978227341787043523,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 246808576,
+    size: 16384,
+    genid: 12714625691379079738,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 246824960,
+    size: 65536,
+    genid: 18361652378693457673,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 246890496,
+    size: 4096,
+    genid: 3327133134094017033,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 246894592,
+    size: 106496,
+    genid: 11271483038880697615,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 247001088,
+    size: 12288,
+    genid: 15144132371766379708,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 247013376,
+    size: 16384,
+    genid: 18043434709661231135,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 247029760,
+    size: 4096,
+    genid: 12220376490117118109,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 247033856,
+    size: 57344,
+    genid: 17374463779071945152,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 247091200,
+    size: 180224,
+    genid: 12756173015394741026,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 247271424,
+    size: 61440,
+    genid: 5040347665267880976,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 247332864,
+    size: 61440,
+    genid: 1052313507634895673,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 247394304,
+    size: 65536,
+    genid: 12789704753003893321,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 247459840,
+    size: 8192,
+    genid: 9836834924079799235,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 247468032,
+    size: 114688,
+    genid: 7928548998713539052,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 247582720,
+    size: 28672,
+    genid: 818089608928056643,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 247611392,
+    size: 77824,
+    genid: 7051002593729277826,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 247689216,
+    size: 12288,
+    genid: 3058348949485962483,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 247701504,
+    size: 122880,
+    genid: 15098493382188104953,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 247824384,
+    size: 24576,
+    genid: 17682147744500056584,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 247848960,
+    size: 90112,
+    genid: 6412262188482661274,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 247939072,
+    size: 8192,
+    genid: 10649138740160861796,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 247947264,
+    size: 53248,
+    genid: 17438084268599151643,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248000512,
+    size: 12288,
+    genid: 1341975594981905995,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248012800,
+    size: 8192,
+    genid: 16718303376073809896,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248020992,
+    size: 8192,
+    genid: 17914751790759891889,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248029184,
+    size: 16384,
+    genid: 14317263731658666897,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248045568,
+    size: 4096,
+    genid: 7025704463684605603,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248049664,
+    size: 24576,
+    genid: 13118445077719711680,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248074240,
+    size: 16384,
+    genid: 9294068012877804647,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248090624,
+    size: 61440,
+    genid: 17661431425531799894,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248152064,
+    size: 4096,
+    genid: 1414878012914071114,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248156160,
+    size: 16384,
+    genid: 13914554639251490278,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248172544,
+    size: 4096,
+    genid: 18322263261705877650,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248176640,
+    size: 114688,
+    genid: 17344717419974230704,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248291328,
+    size: 4096,
+    genid: 7670488624179779501,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248295424,
+    size: 8192,
+    genid: 2866178826029156109,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248303616,
+    size: 8192,
+    genid: 9867301596274754237,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248311808,
+    size: 28672,
+    genid: 13146804292101644685,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248340480,
+    size: 12288,
+    genid: 1253072205614658623,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248352768,
+    size: 90112,
+    genid: 7633136411465738673,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248442880,
+    size: 8192,
+    genid: 9571039616093058995,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248451072,
+    size: 8192,
+    genid: 16655511860225794060,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248459264,
+    size: 8192,
+    genid: 2570783536459117839,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248467456,
+    size: 32768,
+    genid: 586556832295338474,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248500224,
+    size: 32768,
+    genid: 10506870923287679825,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248532992,
+    size: 180224,
+    genid: 10065002688941870664,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248713216,
+    size: 20480,
+    genid: 1435514883419176433,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248733696,
+    size: 36864,
+    genid: 5587206256680000093,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 248770560,
+    size: 790528,
+    genid: 15392699537669328167,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 249561088,
+    size: 2138112,
+    genid: 13161796952858882916,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 251699200,
+    size: 73728,
+    genid: 5424297767164608096,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 251772928,
+    size: 4096,
+    genid: 9763402871154247,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 251777024,
+    size: 12288,
+    genid: 5761708591879824303,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 251789312,
+    size: 12288,
+    genid: 10371051450669132531,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 251801600,
+    size: 16384,
+    genid: 4903931042066935192,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 251817984,
+    size: 16384,
+    genid: 1316052216926792476,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 251834368,
+    size: 139264,
+    genid: 6026161177643896289,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 251973632,
+    size: 20480,
+    genid: 5522217792416026857,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 251994112,
+    size: 4096,
+    genid: 12285845479791888914,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 251998208,
+    size: 4096,
+    genid: 6785640426962567102,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 252002304,
+    size: 8192,
+    genid: 7485867406079586580,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 252010496,
+    size: 8192,
+    genid: 15448297043310633160,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 252018688,
+    size: 28672,
+    genid: 13080699570794557334,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 252047360,
+    size: 237568,
+    genid: 15744479789369994275,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 252284928,
+    size: 94208,
+    genid: 8779745846187084088,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 252379136,
+    size: 4096,
+    genid: 9994052649568081496,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 252383232,
+    size: 28672,
+    genid: 6436579437712283102,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 252411904,
+    size: 12288,
+    genid: 7235907752542770821,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 252424192,
+    size: 4096,
+    genid: 14521201728702292584,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 252428288,
+    size: 8192,
+    genid: 942535759977861075,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 252436480,
+    size: 16384,
+    genid: 687090059172843760,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 252452864,
+    size: 8192,
+    genid: 17243978507234574563,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 252461056,
+    size: 4096,
+    genid: 10097006879473754964,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 252465152,
+    size: 4096,
+    genid: 15082813328179323427,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 252469248,
+    size: 4096,
+    genid: 13574762177230355267,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 252473344,
+    size: 4194304,
+    genid: 17796611977218363365,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 256667648,
+    size: 16384,
+    genid: 6063476160703162362,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 256684032,
+    size: 8192,
+    genid: 3306883865046361610,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 256692224,
+    size: 24576,
+    genid: 7576317987316404046,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 256716800,
+    size: 16384,
+    genid: 17806823370699092619,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 256733184,
+    size: 53248,
+    genid: 4416358654994988841,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 256786432,
+    size: 20480,
+    genid: 1099233627922157674,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 256806912,
+    size: 12288,
+    genid: 395079691080593920,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 256819200,
+    size: 4198400,
+    genid: 4506137446283552334,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 261017600,
+    size: 1048576,
+    genid: 11231293027839550812,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 262066176,
+    size: 1048576,
+    genid: 2135794901804891194,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 263114752,
+    size: 524288,
+    genid: 11801047585499354616,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 263639040,
+    size: 73728,
+    genid: 10922850759242977245,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 263712768,
+    size: 524288,
+    genid: 7090832529028089830,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 264237056,
+    size: 2101248,
+    genid: 10262985586374628213,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 3,
+    resource: 266338304,
+    size: 118784,
+    genid: 15613233637913619847,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 266457088,
+    size: 131072,
+    genid: 14734047572734850172,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 266588160,
+    size: 212992,
+    genid: 8065619127359020532,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 266801152,
+    size: 16384,
+    genid: 3786103296647192145,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 266817536,
+    size: 8192,
+    genid: 4536713486000443331,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 266825728,
+    size: 4096,
+    genid: 16021463318192136876,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 266829824,
+    size: 4096,
+    genid: 152086168396105296,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 266833920,
+    size: 233472,
+    genid: 11790579599029127609,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 267067392,
+    size: 106496,
+    genid: 9554092314543478860,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 267173888,
+    size: 540672,
+    genid: 13340948598578207428,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 267714560,
+    size: 720896,
+    genid: 16857682145470852570,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 3758096384,
+    size: 268435456,
+    genid: 2910524920397548685,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 4290772992,
+    size: 4194304,
+    genid: 8827420072303078054,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO kernel] - sys_cap_read - invoked
+[INFO kernel] - sys_cap_read - arena capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - cap capability_handle {
+    generation_id: 12070414644978692733,
+    arena_id: 13880495065207157253,
+}
+[INFO kernel] - sys_cap_read - finding arena
+[INFO kernel] - sys_cap_read - found slot
+[INFO kernel] - sys_cap_read - slot perms verified
+[INFO kernel] - sys_cap_read - read complete
+[INFO butler] - cap: resource_capability {
+    permissions: 1,
+    resource: 1086626725888,
+    size: 12884901888,
+    genid: 13204113693050714691,
+    derived_refs: 0,
+    virtual_refs: 0,
+}
+[INFO butler] - Done!
+QEMU: Terminated
+

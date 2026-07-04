@@ -7,8 +7,11 @@ impl HalProcessor {
     pub const fn new() -> Self {
         Self { }
     }
-    pub fn init(&mut self) {
+    
+    pub fn init(&mut self, kernel_sp: u64, interrutp_sp: u64) {
     }
+
+    pub fn set_kernel_sp(&mut self, kernel_sp: u64) {}
 }
  
 
@@ -64,8 +67,11 @@ impl HalProcessor {
 
         }
     }
+    
+    pub fn set_kernel_sp(&mut self, kernel_sp: u64) {
+    }
 
-    pub fn init(&mut self) {
+    pub fn init(&mut self, kernel_sp: u64, interrutp_sp: u64) {
         use aarch64_cpu::registers::{CPACR_EL1, SP_EL1, SPSel};
         CPACR_EL1.write(CPACR_EL1::FPEN::TrapNothing);
     }
@@ -98,6 +104,9 @@ use x86_64::{
             SS
         },
         model_specific::{
+            FsBase,
+            GsBase,
+            KernelGsBase,
             Star,
             Efer,
             EferFlags,
@@ -115,6 +124,9 @@ pub struct HalProcessor {
     gdt: GlobalDescriptorTable,
     tss: TaskStateSegment,
     idt: InterruptDescriptorTable,
+
+    pub kernel_rsp: u64,
+    pub user_rsp: u64,
 }
 
 #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
@@ -124,11 +136,19 @@ impl HalProcessor {
             gdt: GlobalDescriptorTable::new(),
             tss: TaskStateSegment::new(),
             idt: InterruptDescriptorTable::new(),
+            kernel_rsp: 0,
+            user_rsp: 0,
         }
     }
 
-    pub fn init(&mut self) {
+    pub fn set_kernel_sp(&mut self, kernel_sp: u64) {
+        self.kernel_rsp = kernel_sp;
+    }
+
+    pub fn init(&mut self, kernel_sp: u64, interrupt_sp: u64) {
         interrupts::disable();
+
+        self.kernel_rsp = kernel_sp;
 
         let gdt = &mut self.gdt;
         let tss = &mut self.tss;
@@ -152,7 +172,6 @@ impl HalProcessor {
             FS::set_reg(data_segment);
             GS::set_reg(data_segment);
             SS::set_reg(data_segment);
-
         }
 
         idt.divide_error.set_handler_fn(divide_error_handler);
@@ -191,6 +210,9 @@ impl HalProcessor {
 
         core::hint::black_box(syscall_vector_table as unsafe extern "C" fn());
         LStar::write(VirtAddr::new(syscall_vector_table as *const () as u64));
+
+        KernelGsBase::write(VirtAddr::new(self as *const _ as u64));
+        GsBase::write(VirtAddr::new(0));
 
         interrupts::enable();
     }
@@ -425,7 +447,12 @@ macro_rules! batch_syscalls {
                 "dispatch_syscall:",
                 "   cmp rax, {NR_SYS}",
                 "   jae .invalid_syscall",
+
+                "   swapgs",
+                "   mov gs:[{user_rsp}], rsp",
+                "   mov rsp, gs:[{kernel_rsp}]",
                 
+                "   push gs:[{user_rsp}]",
                 "   push rcx",
                 "   push r11",
 
@@ -439,6 +466,11 @@ macro_rules! batch_syscalls {
                 
                 "   pop r11",
                 "   pop rcx",
+                "   pop gs:[{user_rsp}]",
+
+                "   mov rsp, gs:[{user_rsp}]",
+                "   swapgs",
+
                 "   sysretq",
                 ".invalid_syscall:",
                 "   mov rax, -1",
@@ -449,6 +481,8 @@ macro_rules! batch_syscalls {
                     concat!("   .long {", stringify!($name), "} - syscall_table")
                 ),*
                 ,
+                kernel_rsp = const core::mem::offset_of!(HalProcessor, kernel_rsp),
+                user_rsp = const core::mem::offset_of!(HalProcessor, user_rsp),
                 NR_SYS = const NR_syscalls,
                 $(
                     $name = sym $name

@@ -210,12 +210,9 @@ fn efi_main() -> Status {
         core::str::from_utf8(core::slice::from_raw_parts(sig_ptr, 8)).unwrap()
     });
 
-    let stack_bottom = frame_allocator.alloc_frames(NonZero::new(16).unwrap()).expect("alloced_frames").get();
-    page_hierarchy.mapping(stack_bottom, stack_bottom, HalPageFlags::RW, 16* 4096);
-    let stack_top = stack_bottom + 16 * 4096;
 
+    let stack_top = kernel.user_stack_top;
     log::info!("stack top {:X}", stack_top);
-
     #[cfg(target_arch = "x86_64")]
     unsafe {
         let aligned_stack = stack_top & !0xF;

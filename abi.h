@@ -177,6 +177,15 @@ struct boot_executable_info {
 	/// Top level page table structure for the executable
 	uint64_t virtual_space;
 
+	/// Kernel stack top
+	uint64_t kernel_stack_top;
+
+	/// Kernel stack top
+	uint64_t user_stack_top;
+
+	/// Interrupt stack top
+	uint64_t interrupt_stack_top;
+
 	/// Page counts
 	struct page_counts {
 		/// Text page count (RE)
