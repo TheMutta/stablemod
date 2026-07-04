@@ -64,8 +64,12 @@ impl log::Log for HalLogger {
         if self.enabled(record.metadata()) {
             #[cfg(all(target_os = "none", target_arch = "x86_64"))]
             {
+                let rsp: u64;
+                unsafe {
+                    core::arch::asm!("mov {}, rsp", out(reg) rsp);
+                }
                 let mut writer = PortWriter;
-                let _ = write!(writer, "[{} {}] - {}\n", record.level(), record.target(), record.args());
+                let _ = write!(writer, "[{:X} {} {}] - {}\n", rsp, record.level(), record.target(), record.args());
             }
 
             #[cfg(target_os = "uefi")]
