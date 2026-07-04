@@ -85,6 +85,7 @@ extern "C" fn _start(arg0: u64, arg1: u64) {
 
         if arena.arenaid == arg1 {
             print!("read arena id and real arena id match!");
+            print!("arena size: {}", arena.arena_cap.size);
         }
     }
 
