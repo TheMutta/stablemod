@@ -16,6 +16,7 @@ pub type ResourceCapabilityArena = crate::c_abi::resource_capability_arena;
 pub type VirtualCapabilityArena = crate::c_abi::virtual_capability_arena;
 
 pub const SYS_DEBUG: usize = 0;
+pub const SYS_CAP_READ: usize = 9;
 
 impl CapabilityHandle {
     pub fn new(generation_id: u64, arena_id: u64) -> Self {

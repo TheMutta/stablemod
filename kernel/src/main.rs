@@ -157,6 +157,33 @@ extern "C" fn sys_cap_write(
     return 1;
 }
 
+#[inline(always)]
+extern "C" fn sys_cap_read_inner(slot: &ResourceCapability, cap_handle: *const CapabilityHandle, off: u64, buffer: *mut u8, len: u64) -> Option<usize> {
+    if slot.genid == unsafe { (*cap_handle).generation_id } {
+        log::info!("sys_cap_read - found slot");
+        if (slot.permissions & crate::c_abi::CAPABILITY_READ) != 0 {
+            log::info!("sys_cap_read - slot perms verified");
+
+            if off + len > slot.size {
+                log::info!("sys_cap_read - offset/size mismatch");
+                return Some(1);
+            }
+
+            unsafe {
+                core::ptr::copy_nonoverlapping((slot.resource + off) as *const u8, buffer, len as usize);
+            }
+            log::info!("sys_cap_read - read complete");
+
+            return Some(0);
+        } else {
+            log::info!("sys_cap_read - permissions invalid");
+            return Some(1);
+        }
+    }
+
+    None
+}
+
 extern "C" fn sys_cap_read(
     arena_handle: *const CapabilityHandle,
     cap_handle: *const CapabilityHandle,
@@ -164,43 +191,48 @@ extern "C" fn sys_cap_read(
     buffer: *mut u8,
     len: u64) -> usize {
 
+    log::info!("sys_cap_read - invoked");
+
     if arena_handle.is_null() || cap_handle.is_null() || buffer.is_null() {
+        log::info!("sys_cap_read - nullptr");
         return 1;
     }
 
-    let arena_handle = unsafe { &*arena_handle };
-    let cap_handle = unsafe { &*cap_handle };
+    log::info!("sys_cap_read - arena {:#?}", unsafe {*arena_handle});
+    log::info!("sys_cap_read - cap {:#?}", unsafe {*cap_handle});
 
-    if arena_handle.arena_id != cap_handle.arena_id {
-        return 1;
+    unsafe {
+        if (*arena_handle).arena_id != (*cap_handle).arena_id {
+            log::info!("sys_cap_read - invalid arena");
+            return 1;
+        }
     }
     
     use kernel::tree::find_arena;
+    log::info!("sys_cap_read - finding arena");
     let arena = unsafe {
-        find_arena(ROOT_RESOURCE_CAPABILITY_ARENA, arena_handle.arena_id)
+        find_arena(ROOT_RESOURCE_CAPABILITY_ARENA, (*arena_handle).arena_id)
     };
-
+    
     if arena.is_null() {
+        log::info!("sys_cap_read - arena not found");
         return 1;
     }
 
-    let arena = unsafe { &*arena };
+    let ret = sys_cap_read_inner(unsafe {&(*arena).arena_cap}, cap_handle, off, buffer, len);
+    if !ret.is_none() {
+        return ret.unwrap();
+    }
 
-    for slot in arena.get_slots() {
-        if slot.genid == cap_handle.generation_id {
-            if (slot.permissions & crate::c_abi::CAPABILITY_READ) != 0 {
-                if off + len > slot.size {
-                    return 1;
-                }
 
-                unsafe {
-                    core::ptr::copy_nonoverlapping((slot.resource + off) as *const u8, buffer, len as usize);
-                }
-            }
-
-            return 0;
+    for slot in unsafe { (*arena).get_slots() } {
+        let ret = sys_cap_read_inner(slot, cap_handle, off, buffer, len);
+        if !ret.is_none() {
+            return ret.unwrap();
         }
     }
+
+    log::info!("sys_cap_read - capability not found");
 
     return 1;
 }
@@ -252,9 +284,14 @@ extern "C" fn _start(bootloader_data: *const crate::c_abi::boot_loader_data) -> 
     log::info!("bootloader data: {:#?}", bootloader_data);
 
 
-    unsafe {
+    let root_resource_capability_arena_handle = unsafe {
         ROOT_RESOURCE_CAPABILITY_ARENA = bootloader_data.kernel_executable.arenas.root_resource_capability_arena as *mut ResourceCapabilityArena;
-    }
+
+        let capability_id = (*ROOT_RESOURCE_CAPABILITY_ARENA).arena_cap.genid;
+        let arena_id = (*ROOT_RESOURCE_CAPABILITY_ARENA).arenaid;
+
+        CapabilityHandle::new(capability_id, arena_id)
+    };
 
     let frame_allocator = unsafe {
         //FRAME_ALLOCATOR.init();
@@ -272,8 +309,9 @@ extern "C" fn _start(bootloader_data: *const crate::c_abi::boot_loader_data) -> 
 
     log::info!("kernel execution finished, handing off!");
 
+
     unsafe {
-        do_userland_jump(bootloader_data.objman_executable.entry, 0);
+        do_userland_jump(bootloader_data.objman_executable.entry, 0, root_resource_capability_arena_handle.generation_id, root_resource_capability_arena_handle.arena_id);
     }
 
     loop {}

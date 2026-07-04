@@ -192,6 +192,8 @@ fn efi_main() -> Status {
 
             core::ptr::write(ptr.as_ptr(), ResourceCapabilityArena::new(arenaid, slots, slots_free, arena_cap));
 
+            page_hierarchy.mapping(page.as_ptr() as u64, page.as_ptr() as u64, HalPageFlags::RW, page_count * 4096);
+
             log::info!("Arena: {:#?}", *ptr.as_ptr());
 
             ptr

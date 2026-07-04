@@ -34,7 +34,7 @@ struct capability_handle {
 	//uint64_t resource_ptr;
 	uint64_t generation_id;
 	uint64_t arena_id;
-}__attribute__((packed));
+};
 
 /// Struct for physical resource capabilities
 struct resource_capability {

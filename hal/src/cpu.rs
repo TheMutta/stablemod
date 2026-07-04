@@ -316,13 +316,15 @@ extern "x86-interrupt" fn security_exception_handler(_isf: InterruptStackFrame, 
 }
 
 #[inline(always)]
-pub unsafe fn do_userland_jump(userland_ip: u64, userland_sp: u64) {
+pub unsafe fn do_userland_jump(userland_ip: u64, userland_sp: u64, arg0: u64, arg1: u64) {
     #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
     unsafe {
         core::arch::asm!(
             //"mov rsp, rax",
 	    "mov r11, 0x202",
             "sysretq",
+            in("rdi") arg0,
+            in("rsi") arg1,
             in("rax") userland_sp,
             in("rcx") userland_ip,
             options(noreturn),

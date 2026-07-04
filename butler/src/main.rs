@@ -37,7 +37,6 @@ pub struct LogWriter;
 impl core::fmt::Write for LogWriter {
     fn write_str(&mut self, s: &str) -> core::fmt::Result {
         unsafe {
-            // Trigger your macro: syscall!(num, arg1, arg2, arg3)
             syscall!(
                 kernel::SYS_DEBUG, 
                 s.as_ptr() as usize, 
@@ -56,10 +55,32 @@ macro_rules! print {
     }};
 }
 
+use kernel::CapabilityHandle;
+
 #[unsafe(no_mangle)]
-fn _start() {
+extern "C" fn _start(arg0: u64, arg1: u64) {
     print!("Hello, world!");
     print!("Butler is alive!");
+
+    let arena_handle = CapabilityHandle::new(arg0, arg1);
+    let cap_handle = CapabilityHandle::new(arg0, arg1);
+
+    let buf = [0u8; 128];
+
+    print!("Read!");
+    let res = syscall!(
+        kernel::SYS_CAP_READ,
+        &arena_handle as *const CapabilityHandle as usize,
+        &cap_handle as *const CapabilityHandle as usize,
+        0,
+        &buf as *const u8 as *mut u8 as usize,
+        128
+    );
+
+    if res == 0 {
+        print!("Valid read!");
+    }
+
 
     loop {}
 }

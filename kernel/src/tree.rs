@@ -71,7 +71,7 @@ pub unsafe fn find_arena(
     target_id: u64
 ) -> *mut ResourceCapabilityArena {
     let mut current = root;
-    
+
     unsafe {
         while !current.is_null() {
             if target_id == (*current).arenaid {
