@@ -312,7 +312,7 @@ extern "C" fn _start(bootloader_data: *const crate::c_abi::boot_loader_data) -> 
     log::info!("kernel execution finished, handing off!");
 
     unsafe {
-        do_userland_jump(bootloader_data.objman_executable.entry, 0, root_resource_capability_arena_handle.generation_id, root_resource_capability_arena_handle.arena_id);
+        do_userland_jump(bootloader_data.objman_executable.entry, bootloader_data.objman_executable.user_stack_top, root_resource_capability_arena_handle.generation_id, root_resource_capability_arena_handle.arena_id);
     }
 
     loop {}

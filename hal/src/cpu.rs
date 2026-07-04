@@ -342,7 +342,7 @@ pub unsafe fn do_userland_jump(userland_ip: u64, userland_sp: u64, arg0: u64, ar
     #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
     unsafe {
         core::arch::asm!(
-            //"mov rsp, rax",
+            "mov rsp, rax",
 	    "mov r11, 0x3202",
             "sysretq",
             in("rdi") arg0,
