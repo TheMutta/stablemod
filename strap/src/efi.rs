@@ -182,7 +182,7 @@ fn efi_main() -> Status {
             let slots = slots as u32;
             let slots_free = slots;
 
-            let permissions = crate::c_abi::CAPABILITY_READ | crate::c_abi::CAPABILITY_WRITE;
+            let permissions = crate::c_abi::CAPABILITY_READ;
             let resource = ptr.as_ptr() as u64;
             let size = page_count as u64 * 4096;
             let genid = rng_data[1];
@@ -226,7 +226,10 @@ fn efi_main() -> Status {
         for (idx, entry) in memory_map.entries().enumerate() {
             let mut rng_data = [0u64; 1];
             rng_generator.generate_rng(&mut rng_data);
-            let permissions = crate::c_abi::CAPABILITY_READ | crate::c_abi::CAPABILITY_WRITE;
+            let permissions = match entry.ty {
+                uefi::boot::MemoryType::CONVENTIONAL => crate::c_abi::CAPABILITY_READ | crate::c_abi::CAPABILITY_WRITE,
+                _ => crate::c_abi::CAPABILITY_READ,
+            };
             let resource = entry.phys_start;
             let size = entry.page_count * 4096;
             let genid = rng_data[0];

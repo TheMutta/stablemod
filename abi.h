@@ -77,6 +77,11 @@ struct virtual_capability {
 
 /// Strut defining the header for a physical resource capability arena
 struct resource_capability_arena {
+	/// Intrusive tree data
+	struct resource_capability_arena *left;
+	struct resource_capability_arena *right;
+	uint32_t level;
+
 	/// Randomly generated arena id
 	uint64_t arenaid;
 
@@ -95,6 +100,11 @@ struct resource_capability_arena {
 
 /// Strut defining the header for a virtual resource capability arena
 struct virtual_capability_arena {
+	/// Intrusive tree data
+	struct virtual_capability_arena *left;
+	struct virtual_capability_arena *right;
+	uint32_t level;
+
 	/// Randomly generated arena id
 	uint64_t arenaid;
 
