@@ -118,8 +118,8 @@ use core::ffi::{c_char, c_int, c_void, c_size_t};
 
 /// Initializes the hypercall layer. Called early during rump_init().
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn rumpuser_init() -> c_int {
-    0
+pub unsafe extern "C" fn rumpuser_init(_version: c_int, _hyp: *const c_void) -> c_int {
+    -1
 }
 
 /// Retrieves configuration parameters (like memory sizes or environment options).
