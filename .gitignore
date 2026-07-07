@@ -1,5 +1,6 @@
 /testing
 /serial.log
+/buildrump.sh
 /tmp
 **/target
 *.x86_64

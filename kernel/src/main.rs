@@ -21,6 +21,7 @@ pub fn panic_handler(info: &PanicInfo) -> ! {
 }
 
 use hal::cpu::HalProcessor;
+use hal::rng::HalRngGenerator;
 use hal::cpu::do_userland_jump;
 use hal::batch_syscalls;
 static mut BOOT_PROCESSOR: HalProcessor = HalProcessor::new();
@@ -37,21 +38,77 @@ extern "C" fn sys_debug(s: *const u8, count: usize) -> usize {
 
 
 use kernel::*;
+use kernel::tree::*;
 
 extern "C" fn sys_resource_arena_create(
     arena_handle: *const CapabilityHandle,
     cap_handle: *const CapabilityHandle,
     arena_cap_handle: *mut *const CapabilityHandle) -> usize {
+    todo!();
 
     if arena_handle.is_null() || cap_handle.is_null() || arena_cap_handle.is_null() {
 return 1;
     }
-    
-    let _arena_handle = unsafe { &*arena_handle };
-    let _cap_handle = unsafe { &*cap_handle };
-    let _arena_cap_hanle = unsafe { &mut*arena_cap_handle };
 
-    todo!();
+    log::info!("sys_res_arena_create - arena {:#?}", unsafe {*arena_handle});
+    log::info!("sys_res_arena_create - cap {:#?}", unsafe {*cap_handle});
+
+    unsafe {
+        if (*arena_handle).arena_id != (*cap_handle).arena_id {
+            log::info!("sys_res_arena_create - invalid arena");
+            return 1;
+        }
+    }
+    
+    use kernel::tree::find_arena;
+    log::info!("sys_res_arena_create - finding arena");
+    let arena = unsafe {
+        find_arena(ROOT_RESOURCE_CAPABILITY_ARENA, (*arena_handle).arena_id)
+    };
+    
+    if arena.is_null() {
+        log::info!("sys_res_arena_create - arena not found");
+        return 1;
+    }
+
+    for slot in unsafe { (*arena).get_slots() } {
+        if slot.genid == unsafe { (*cap_handle).generation_id } {
+            log::info!("sys_res_arena_create - found slot");
+            if (slot.permissions & (crate::c_abi::CAPABILITY_WRITE | crate::c_abi::CAPABILITY_READ | crate::c_abi::CAPABILITY_DERIVE)) != 0 {
+                log::info!("sys_res_arena_create - slot perms verified");
+
+                let rng_generator = HalRngGenerator::new();
+                let mut rng_data = [0u64; 2];
+                rng_generator.generate_rng(&mut rng_data);
+
+                let new_arena = slot.resource as *mut ResourceCapabilityArena;
+                unsafe {
+                    (new_arena as *mut u8).write_bytes(0x00, slot.size as usize);
+                }
+                use core::mem::offset_of;
+
+                let arenaid = rng_data[0];
+                let slots = (slot.size as usize - offset_of!(ResourceCapabilityArena, res_cap)) / size_of::<ResourceCapability>();
+                let slots_free = slots;
+                let permissions = crate::c_abi::CAPABILITY_READ | crate::c_abi::CAPABILITY_REVOKE;
+                let arena_cap = ResourceCapability::new(permissions, slot.resource, slot.size, rng_data[1], 0, 0);
+                unsafe {
+                    core::ptr::write(new_arena, ResourceCapabilityArena::new(arenaid, slots as u32, slots_free as u32, arena_cap));
+                    ROOT_RESOURCE_CAPABILITY_ARENA =
+                        insert_arena(ROOT_RESOURCE_CAPABILITY_ARENA, new_arena);
+                }
+
+                log::info!("sys_res_arena_create - arena creation complete");
+
+                return 0;
+            } else {
+                log::info!("sys_res_arena_create - permissions invalid");
+                return 1;
+            }
+        }
+    }
+
+    return 1;
 }
 
 extern "C" fn sys_resource_arena_destroy(
@@ -109,6 +166,33 @@ extern "C" fn sys_cap_revoke(
     todo!();
 }
 
+#[inline(always)]
+fn sys_cap_write_inner(slot: &ResourceCapability, cap_handle: *const CapabilityHandle, off: u64, buffer: *const u8, len: u64) -> Option<usize> {
+    if slot.genid == unsafe { (*cap_handle).generation_id } {
+        log::info!("sys_cap_write - found slot");
+        if (slot.permissions & crate::c_abi::CAPABILITY_WRITE) != 0 {
+            log::info!("sys_cap_write - slot perms verified");
+
+            if off + len > slot.size {
+                log::info!("sys_cap_write - offset/size mismatch");
+                return Some(1);
+            }
+
+            unsafe {
+                core::ptr::copy_nonoverlapping(buffer, (slot.resource + off) as *mut u8, len as usize);
+            }
+            log::info!("sys_cap_write - write complete");
+
+            return Some(0);
+        } else {
+            log::info!("sys_cap_write - permissions invalid");
+            return Some(1);
+        }
+    }
+
+    None
+}
+
 extern "C" fn sys_cap_write(
     arena_handle: *const CapabilityHandle,
     cap_handle: *const CapabilityHandle,
@@ -116,49 +200,54 @@ extern "C" fn sys_cap_write(
     buffer: *const u8,
     len: u64) -> usize {
 
+    log::info!("sys_cap_write - invoked");
+
     if arena_handle.is_null() || cap_handle.is_null() || buffer.is_null() {
+        log::info!("sys_cap_write - nullptr");
         return 1;
     }
 
-    let arena_handle = unsafe { &*arena_handle };
-    let cap_handle = unsafe { &*cap_handle };
+    log::info!("sys_cap_write - arena {:#?}", unsafe {*arena_handle});
+    log::info!("sys_cap_write - cap {:#?}", unsafe {*cap_handle});
 
-    if arena_handle.arena_id != cap_handle.arena_id {
-        return 1;
+    unsafe {
+        if (*arena_handle).arena_id != (*cap_handle).arena_id {
+            log::info!("sys_cap_write - invalid arena");
+            return 1;
+        }
     }
     
     use kernel::tree::find_arena;
+    log::info!("sys_cap_write - finding arena");
     let arena = unsafe {
-        find_arena(ROOT_RESOURCE_CAPABILITY_ARENA, arena_handle.arena_id)
+        find_arena(ROOT_RESOURCE_CAPABILITY_ARENA, (*arena_handle).arena_id)
     };
-
+    
     if arena.is_null() {
+        log::info!("sys_cap_write - arena not found");
         return 1;
     }
 
-    let arena = unsafe { &*arena };
+    let ret = sys_cap_write_inner(unsafe {&(*arena).arena_cap}, cap_handle, off, buffer, len);
+    if !ret.is_none() {
+        return ret.unwrap();
+    }
 
-    for slot in arena.get_slots() {
-        if slot.genid == cap_handle.generation_id {
-            if (slot.permissions & crate::c_abi::CAPABILITY_WRITE) != 0 {
-                if off + len > slot.size {
-                    return 1;
-                }
 
-                unsafe {
-                    core::ptr::copy_nonoverlapping(buffer, (slot.resource + off) as *mut u8, len as usize);
-                }
-            }
-
-            return 0;
+    for slot in unsafe { (*arena).get_slots() } {
+        let ret = sys_cap_write_inner(slot, cap_handle, off, buffer, len);
+        if !ret.is_none() {
+            return ret.unwrap();
         }
     }
+
+    log::info!("sys_cap_write - capability not found");
 
     return 1;
 }
 
 #[inline(always)]
-extern "C" fn sys_cap_read_inner(slot: &ResourceCapability, cap_handle: *const CapabilityHandle, off: u64, buffer: *mut u8, len: u64) -> Option<usize> {
+fn sys_cap_read_inner(slot: &ResourceCapability, cap_handle: *const CapabilityHandle, off: u64, buffer: *mut u8, len: u64) -> Option<usize> {
     if slot.genid == unsafe { (*cap_handle).generation_id } {
         log::info!("sys_cap_read - found slot");
         if (slot.permissions & crate::c_abi::CAPABILITY_READ) != 0 {
@@ -198,8 +287,8 @@ extern "C" fn sys_cap_read(
         return 1;
     }
 
-    log::info!("sys_cap_read - arena {:#?}", unsafe {*arena_handle});
-    log::info!("sys_cap_read - cap {:#?}", unsafe {*cap_handle});
+    log::info!("sys_cap_read - arena {:?}", unsafe {*arena_handle});
+    log::info!("sys_cap_read - cap {:?}", unsafe {*cap_handle});
 
     unsafe {
         if (*arena_handle).arena_id != (*cap_handle).arena_id {
@@ -218,6 +307,8 @@ extern "C" fn sys_cap_read(
         log::info!("sys_cap_read - arena not found");
         return 1;
     }
+        
+    log::info!("sys_cap_read - arena at {:X}", arena as u64);
 
     let ret = sys_cap_read_inner(unsafe {&(*arena).arena_cap}, cap_handle, off, buffer, len);
     if !ret.is_none() {

@@ -52,6 +52,9 @@ struct resource_capability {
 	/// Randomly generated generation id
 	uint64_t genid;
 
+	/// Parent (if needed, otherwise zeroed)
+	struct capability_handle parent;
+
 	/// Atomic counter of all capabilities derived from this one
 	uint64_t derived_refs;
 

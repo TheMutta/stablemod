@@ -12,11 +12,11 @@ cp ./strap/config_uefi_example.toml ./testing/esp/config.toml
 cp ./kernel/target/x86_64-unknown-none/debug/kernel ./testing/esp/kernel.x86_64
 cp ./butler/target/x86_64-unknown-none/debug/butler ./testing/esp/butler.x86_64
 
-cp ./kernel/target/aarch64-unknown-none/debug/kernel ./testing/esp/kernel.aarch64
-cp ./butler/target/aarch64-unknown-none/debug/butler ./testing/esp/butler.aarch64
+#cp ./kernel/target/aarch64-unknown-none/debug/kernel ./testing/esp/kernel.aarch64
+#cp ./butler/target/aarch64-unknown-none/debug/butler ./testing/esp/butler.aarch64
 
 cp ./strap/target/x86_64-unknown-uefi/debug/strap.efi ./testing/esp/efi/boot/bootx64.efi
-cp ./strap/target/aarch64-unknown-uefi/debug/strap.efi ./testing/esp/efi/boot/bootaa64.efi
+#cp ./strap/target/aarch64-unknown-uefi/debug/strap.efi ./testing/esp/efi/boot/bootaa64.efi
 
 
 mkdir -p ./testing/linux

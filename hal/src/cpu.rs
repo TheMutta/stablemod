@@ -1,3 +1,5 @@
+use crate::log::HalLogger;
+
 #[cfg(target_os = "linux")]
 pub struct HalProcessor {
 }
@@ -94,6 +96,7 @@ use x86_64::{
         },
     },
     registers::{
+        control::Cr2,
         segmentation::{
             Segment,
             CS,
@@ -153,6 +156,8 @@ impl HalProcessor {
         let gdt = &mut self.gdt;
         let tss = &mut self.tss;
         let idt = &mut self.idt;
+
+        tss.privilege_stack_table = [VirtAddr::new(interrupt_sp); 3];
 
         let code_segment = gdt.append(Descriptor::kernel_code_segment());
         let data_segment = gdt.append(Descriptor::kernel_data_segment());
@@ -284,11 +289,13 @@ extern "x86-interrupt" fn stack_segment_fault_handler(_isf: InterruptStackFrame,
 
 #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
 extern "x86-interrupt" fn general_protection_fault_handler(_isf: InterruptStackFrame, _error_code: u64) {
+    log::error!("GPF");
     loop {}
 }
 
 #[cfg(all(target_arch = "x86_64", any(target_os = "none", target_os= "uefi")))]
-extern "x86-interrupt" fn page_fault_handler(_isf: InterruptStackFrame, _error_code: PageFaultErrorCode) {
+extern "x86-interrupt" fn page_fault_handler(isf: InterruptStackFrame, error_code: PageFaultErrorCode) {
+    log::error!("PF at {:X} from {:X} by {}", Cr2::read_raw(), isf.instruction_pointer, 0);
     loop {}
 }
 

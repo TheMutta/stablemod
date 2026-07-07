@@ -177,8 +177,11 @@ fn efi_main() -> Status {
             let mut rng_data = [0u64; 2];
             rng_generator.generate_rng(&mut rng_data);
 
+            use core::mem::offset_of;
+
             let arenaid = rng_data[0];
-            let slots = (arena_size - size_of::<ResourceCapabilityArena>()) / size_of::<ResourceCapability>();
+            let slots = (arena_size - offset_of!(ResourceCapabilityArena, res_cap)) / size_of::<ResourceCapability>();
+
             let slots = slots as u32;
             let slots_free = slots;
 
@@ -192,7 +195,7 @@ fn efi_main() -> Status {
 
             core::ptr::write(ptr.as_ptr(), ResourceCapabilityArena::new(arenaid, slots, slots_free, arena_cap));
 
-            page_hierarchy.mapping(page.as_ptr() as u64, page.as_ptr() as u64, HalPageFlags::KRW, page_count * 4096);
+            page_hierarchy.mapping(page.as_ptr() as u64, page.as_ptr() as u64, HalPageFlags::KRW, arena_size);
 
             log::info!("Arena: {:#?}", *ptr.as_ptr());
 

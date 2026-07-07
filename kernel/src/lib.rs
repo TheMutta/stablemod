@@ -36,6 +36,7 @@ impl ResourceCapability {
             genid,
             derived_refs,
             virtual_refs,
+            ..Default::default()
         }
     }
 }
